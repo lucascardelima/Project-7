@@ -8,7 +8,7 @@ exports.createPost = async (req, res, next) => {
     const postID = crypto.randomUUID();
     const url = req.protocol + '://' + req.get('host');
     const currentDate = new Date();
-
+    
     request.input('postID', sql.NVarChar, postID)
     .input('userID', sql.NVarChar, req.body.userID)
     .input('postTitle', sql.NVarChar, req.body.postTitle)
@@ -16,7 +16,7 @@ exports.createPost = async (req, res, next) => {
     .input('postEditDate', sql.DateTime, currentDate)
     .input('postText', sql.NVarChar, req.body.postText)
     .input('postCategory', sql.NVarChar, req.body.postCategory)
-    .input('imageUrl', sql.NVarChar, url + '/images/' + req.file.filename)
+    .input('imageUrl', sql.NVarChar, 'test')
     .execute('createPost').then(
         () => {
             res.status(200).json({
