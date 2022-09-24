@@ -11,7 +11,7 @@ const config = {
         instancename: process.env.INSTANCE_NAME,
         trustServerCertificate: true
     },
-    port: process.env.DB_PORT
+    port: parseInt(process.env.DB_PORT)
 };
 
 module.exports = {
