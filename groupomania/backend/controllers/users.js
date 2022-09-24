@@ -79,6 +79,7 @@ exports.insertUsers = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
     const userID = crypto.randomUUID();
+    const currentDate = new Date();
 
     bcrypt.hash(req.body.password, 10).then(
         (hash) => {
@@ -88,7 +89,7 @@ exports.insertUsers = async (req, res, next) => {
             .input('dateOfBirth', sql.DateTime, new Date(req.body.dateOfBirth))
             .input('email', sql.NVarChar, req.body.email)
             .input('password', sql.NVarChar(60), hash)
-            .input('currentDate', sql.DateTime, new Date())
+            .input('currentDate', sql.DateTime, currentDate)
             .execute('insertUser').then(
                 () => {
                     res.status(200).json({
