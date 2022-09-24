@@ -9,7 +9,7 @@ exports.createPost = async (req, res, next) => {
     const url = req.protocol + '://' + req.get('host');
     const currentDate = new Date();
 
-    request.input('postID', sql.NVarChar, userID)
+    request.input('postID', sql.NVarChar, postID)
     .input('userID', sql.NVarChar, req.body.userID)
     .input('postTitle', sql.NVarChar, req.body.postTitle)
     .input('postCreationDate', sql.DateTime, currentDate)
