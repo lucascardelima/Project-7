@@ -1,5 +1,3 @@
-const dotenv = require('dotenv').config();
+const date = new Date();
 
-
-
-console.log(process.env.DATABASE);
+console.log(date.getDate());
