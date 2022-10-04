@@ -47,7 +47,7 @@ exports.updatePost = async (req, res, next) => {
     .execute('updatePost').then(
         () => {
             res.status(200).json({
-                success: 'Comment updated successfully'
+                success: 'Post updated successfully'
             })
        }
     ).catch (
@@ -69,7 +69,7 @@ exports.deletePost = async (req, res, next) => {
     .execute('deletePost').then(
         () => {
             res.status(200).json({
-                success: 'Comment deleted successfully'
+                success: 'Post deleted successfully'
             })
         }
     ).catch (
