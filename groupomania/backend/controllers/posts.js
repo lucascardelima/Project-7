@@ -40,7 +40,7 @@ exports.updatePost = async (req, res, next) => {
 
     request.input('postText', sql.NVarChar, req.body.postText)
     .input('postID', sql.NVarChar, req.body.postID)
-    .input('postTitle', sql.NVarChar, req.body.postID)
+    .input('postTitle', sql.NVarChar, req.body.postTitle)
     .input('postCategory', sql.NVarChar, req.body.postCategory)
     .input('userID', sql.NVarChar, req.body.userID)
     .input('postEditDate', sql.DateTime, currentDate)
