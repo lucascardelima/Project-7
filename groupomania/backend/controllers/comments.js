@@ -55,3 +55,26 @@ exports.updateComment = async (req, res, next) => {
         }
     )
 }
+
+exports.deleteComment = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+    
+    request.input('commentID', sql.NVarChar, req.body.postID)
+    .input('userID', sql.NVarChar, req.body.userID)
+    .input('commentID', sql.NVarChar, req.body.commentID)
+    .execute('deleteComment').then(
+        () => {
+            res.status(200).json({
+                success: 'Comment deleted successfully'
+            })
+        }
+    ).catch (
+        (error) => {
+            res.status(500).json({
+                error: error
+            })
+            sql.close();
+        }
+    )
+}
