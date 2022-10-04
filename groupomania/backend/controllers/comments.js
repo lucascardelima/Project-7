@@ -29,3 +29,29 @@ exports.createComment = async (req, res, next) => {
         }
     )
 }
+
+exports.updateComment = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+    let currentDate = new Date();
+
+    request.input('commentText', sql.NVarChar, req.body.commentText)
+    .input('commentID', sql.NVarChar, req.body.commentID)
+    .input('postID', sql.NVarchar, req.body.postID)
+    .input('userID', sql.NVarchar, req.body.userID)
+    .input('commentEditDate', sql.DateTime, currentDate)
+    .execute('updateComment').then(
+        () => {
+            res.status(200).json({
+                success: 'Comment updated successfully'
+            })
+       }
+    ).catch (
+        (error) => {
+            res.status(500).json({
+                error: error
+            })
+            sql.close();
+        }
+    )
+}
