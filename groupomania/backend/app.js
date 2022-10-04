@@ -4,6 +4,7 @@ const app = express();
 
 const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
+const commentsRoutes = require('./routes/comments');
 
 app.use(express.json());
 
@@ -15,7 +16,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth', usersRoutes);
-app.use('/api', postsRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/comments', commentsRoutes);
 
 
 module.exports = app;
