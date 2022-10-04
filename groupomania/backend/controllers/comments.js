@@ -37,8 +37,8 @@ exports.updateComment = async (req, res, next) => {
 
     request.input('commentText', sql.NVarChar, req.body.commentText)
     .input('commentID', sql.NVarChar, req.body.commentID)
-    .input('postID', sql.NVarchar, req.body.postID)
-    .input('userID', sql.NVarchar, req.body.userID)
+    .input('postID', sql.NVarChar, req.body.postID)
+    .input('userID', sql.NVarChar, req.body.userID)
     .input('commentEditDate', sql.DateTime, currentDate)
     .execute('updateComment').then(
         () => {
@@ -60,7 +60,7 @@ exports.deleteComment = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
     
-    request.input('commentID', sql.NVarChar, req.body.postID)
+    request.input('postID', sql.NVarChar, req.body.postID)
     .input('userID', sql.NVarChar, req.body.userID)
     .input('commentID', sql.NVarChar, req.body.commentID)
     .execute('deleteComment').then(
