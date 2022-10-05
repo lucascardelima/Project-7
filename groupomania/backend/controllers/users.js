@@ -96,7 +96,7 @@ exports.getUser = async (req, res, next) => {
 }
 
 
-exports.insertUsers = async (req, res, next) => {
+exports.insertUser = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
     const userID = crypto.randomUUID();
@@ -111,6 +111,7 @@ exports.insertUsers = async (req, res, next) => {
             .input('email', sql.NVarChar, req.body.email)
             .input('password', sql.NVarChar(60), hash)
             .input('currentDate', sql.DateTime, currentDate)
+            .input('preference', sql.NVarChar, req.body.preference)
             .execute('insertUser').then(
                 () => {
                     res.status(200).json({
