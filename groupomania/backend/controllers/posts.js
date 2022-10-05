@@ -86,10 +86,11 @@ exports.getPosts = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
 
-    request.query('SELECT * FROM Posts').then(
-        (users) => {
+    request.input('postCategory', sql.NVarChar, req.body.postCategory)
+    .execute('getPosts').then(
+        (posts) => {
             res.status(200).json({
-                result: users
+                result: posts
             })
         }
     ).catch (
@@ -101,4 +102,6 @@ exports.getPosts = async (req, res, next) => {
         }
     )
 }
+
+
 
