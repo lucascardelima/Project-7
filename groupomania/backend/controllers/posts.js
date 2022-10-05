@@ -3,7 +3,7 @@ const dbconfig = require('../config/dbconfig').config;
 const crypto = require('crypto');
 
 exports.createPost = async (req, res, next) => {
-    let pool = await sql.connect(dbconfig)
+    let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
     const postID = crypto.randomUUID();
     const url = req.protocol + '://' + req.get('host');
@@ -76,6 +76,26 @@ exports.deletePost = async (req, res, next) => {
         (error) => {
             res.status(500).json({
                 error: error
+            })
+            sql.close();
+        }
+    )
+}
+
+exports.getPosts = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+
+    request.query('SELECT * FROM Posts').then(
+        (users) => {
+            res.status(200).json({
+                result: users
+            })
+        }
+    ).catch (
+        (error) => {
+            res.status(500).json({
+                error: error 
             })
             sql.close();
         }
