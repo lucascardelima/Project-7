@@ -61,7 +61,7 @@ exports.login = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
-    pool.request().query('SELECT * FROM Users').then(
+    pool.request().query('SELECT a.userID, a.firstName, a.lastName, a.dateOfBirth, a.email, b.password FROM Users a LEFT JOIN UserCredentials b on a.userID = b.userID').then(
         (users) => {
             res.status(200).json(users);
         }
@@ -73,6 +73,27 @@ exports.getUsers = async (req, res, next) => {
         }
     );
 }; 
+
+exports.getUser = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+
+    request.input('userID', sql.NVarChar, req.body.userID)
+    .execute(getUser).then(
+        (user) => {
+            res.status(200).json({
+                user: user
+            })
+        }
+    ).catch (
+        (error) => {
+            res.status(500).json({
+                error: error
+            })
+            sql.close();
+        }
+    )
+}
 
 
 exports.insertUsers = async (req, res, next) => {
