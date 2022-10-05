@@ -79,7 +79,7 @@ exports.getUser = async (req, res, next) => {
     let request = new sql.Request(pool);
 
     request.input('userID', sql.NVarChar, req.body.userID)
-    .execute(getUser).then(
+    .execute('getUser').then(
         (user) => {
             res.status(200).json({
                 user: user
