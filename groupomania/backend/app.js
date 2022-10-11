@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', usersRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/comments', commentsRoutes);
-app.use('/api/like', likeRoute);
+app.use('/api/like', likeRoutes);
 
 
 module.exports = app;
