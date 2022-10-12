@@ -37,9 +37,9 @@ exports.checkUserLike = async (req, res, next) => {
     request.input('userID', sql.NVarChar, req.body.userID)
     .input('postID', sql.NVarChar, req.body.postID)
     .execute('checkUserLike').then(
-        () => {
+        (result) => {
             res.status(200).json({
-                success: 'User likes retrieved successfully'
+                result: result
             })
         }
     ).catch(
@@ -83,16 +83,19 @@ exports.like = async (req, res, next) => {
 // Deleted the record that associates the userID with the postID
 // what would dislike a post.
 
+// If the request to dislike the post is sent 2 times, the API will
+// send the response that the 
+
 exports.dislike = async (req, res, next) => {
     let pool = await sql.connect(dbconfig)
     let request = new sql.Request(pool);
     
     request.input('userID', sql.NVarChar, req.body.userID)
     .input('postID', sql.NVarChar, req.body.postID)
-    .execute('dislike').then(
+    .execute('postDislike').then(
         () => {
             res.status(200).json({
-                success: 'Post dislked successfully'
+                success: 'Post disliked successfully'
             })
         }
     ).catch(
