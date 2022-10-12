@@ -83,7 +83,7 @@ exports.like = async (req, res, next) => {
 // Deleted the record that associates the userID with the postID
 // what would dislike a post.
 
-exports.deslike = async (req, res, next) => {
+exports.dislike = async (req, res, next) => {
     let pool = await sql.connect(dbconfig)
     let request = new sql.Request(pool);
     
