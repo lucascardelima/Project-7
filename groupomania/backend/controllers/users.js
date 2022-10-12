@@ -95,8 +95,7 @@ exports.getUser = async (req, res, next) => {
     )
 }
 
-
-exports.insertUser = async (req, res, next) => {
+exports.signup = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
     const userID = crypto.randomUUID();
