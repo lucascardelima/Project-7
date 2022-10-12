@@ -8,8 +8,4 @@ router.post('/createpost', postsCtrl.createPost);
 router.post('/deletepost', postsCtrl.deletePost);
 router.post('/updatepost', postsCtrl.updatePost);
 
-
-
-
-
 module.exports = router;
