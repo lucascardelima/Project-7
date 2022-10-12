@@ -7,3 +7,5 @@ router.get('/getlikes', likeCtrl.getLikes);
 router.get('/checkuserlike', likeCtrl.checkUserLike);
 router.post('/', likeCtrl.like);
 router.post('/dislike', likeCtrl.dislike);
+
+module.exports = router;
