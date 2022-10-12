@@ -83,8 +83,8 @@ exports.like = async (req, res, next) => {
 // Deleted the record that associates the userID with the postID
 // what would dislike a post.
 
-// If the request to dislike the post is sent 2 times, the API will
-// send the response that the 
+// If the request to dislike the post is sent 2 times or more, the API will
+// send the response that the post was dislked successfully. 
 
 exports.dislike = async (req, res, next) => {
     let pool = await sql.connect(dbconfig)
