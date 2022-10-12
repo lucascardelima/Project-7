@@ -126,8 +126,59 @@ exports.signup = async (req, res, next) => {
                 }
             )
         }
+    ).catch(
+        (error) => {
+            res.status(500).json({
+                error: error
+            })
+            sql.close();
+        }
     )     
 };
+
+exports.updateUser = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+    const currentDate = new Date();
+
+    bcrypt.hash(req.body.password, 10).then(
+        (hash) => {
+            request.input('userID', sql.NVarChar, req.body.userID)
+            .input('firstName', sql.NVarChar, req.body.firstName)
+            .input('lastName', sql.NVarChar, req.body.lastName)
+            .input('dateOfBirth', sql.DateTime, new Date(req.body.dateOfBirth))
+            .input('email', sql.NVarChar, req.body.email)
+            .input('password', sql.NVarChar(60), hash)
+            .input('currentDate', sql.DateTime, currentDate)
+            .input('preference', sql.NVarChar, req.body.preference)
+            .execute('updateUser').then(
+                () => {
+                    res.status(200).json({
+                        success: 'User Updated Successfully'
+                    })
+                }
+            ).catch(
+                (error) => {
+                    res.status(500).json({
+                        error: error
+                    })
+                    sql.close();
+                }
+            );
+        }
+    ).catch(
+        (error) => {
+            res.status(500).json({
+                error: error
+            })
+            sql.close();
+        }
+    )
+}
+
+    
+    
+
 
 
 
