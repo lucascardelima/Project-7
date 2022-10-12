@@ -11,9 +11,9 @@ exports.getLikes = async (req, res, next) => {
     let request = new sql.Request(pool);
 
     request.execute('getLikes').then(
-        () => {
+        (likes) => {
             res.status(200).json({
-                success: 'Likes downloaded successfully'
+                likes: likes
             })
         }
     ).catch(
