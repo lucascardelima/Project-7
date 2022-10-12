@@ -62,8 +62,8 @@ exports.like = async (req, res, next) => {
 
     request.input('userID', sql.NVarChar, req.body.userID)
     .input('postID', sql.NVarChar, req.body.postID)
-    .input('isLiked', sql.NVarChar, 1)
-    .input('likeID', sql.Bit, likeID)
+    .input('isLiked', sql.Bit, 1)
+    .input('likeID', sql.NVarChar, likeID)
     .execute('postLike').then(
         () => {
             res.status(200).json({
