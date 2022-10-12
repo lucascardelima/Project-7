@@ -143,6 +143,7 @@ exports.updateUser = async (req, res, next) => {
 
     bcrypt.hash(req.body.password, 10).then(
         (hash) => {
+            
             request.input('userID', sql.NVarChar, req.body.userID)
             .input('firstName', sql.NVarChar, req.body.firstName)
             .input('lastName', sql.NVarChar, req.body.lastName)
