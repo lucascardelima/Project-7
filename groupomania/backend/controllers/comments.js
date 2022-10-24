@@ -2,6 +2,24 @@ const sql = require('mssql');
 const dbconfig = require('../config/dbconfig').config;
 const crypto = require('crypto');
 
+exports.getComments = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+
+    request.input('postID', sql.NVarChar, req.body.postID)
+    .execute('getComments').then(
+        (comments) => {
+            res.status(200).json({
+                comments: comments
+            })
+        }
+    ).catch(
+        res.status(500).json({
+            error: error
+        })
+    )
+}
+
 exports.createComment = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
