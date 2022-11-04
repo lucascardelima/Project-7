@@ -18,14 +18,17 @@
           postTitle:'',
           postText: '',
           postCategory: '',
-          userID: 'a83a916e-9545-4126-9b6a-11a498fcb505'
+          userID: '',
+          token: ''
         }
       }
     },
     methods: {
       createPost() {
+        this.post.userID = sessionStorage.getItem('userID');
+        this.post.token = sessionStorage.getItem('token');
         axios.post('http://localhost:3000/api/posts/createpost', this.post)
-          .then(response => console.log(response))
+          .then(response => console.log(response.data))
           .catch(error => console.log(error))
       }
     }
@@ -37,9 +40,10 @@
   <div class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="main-card">
-        <div class="card bg-secondary text-white" style="border-radius: 1rem">
+        <div class="card bg-secondary text-white" style="border-radius: 0rem">
           <div class="card-body p-4">
-            <div>
+            <form @submit.prevent="createPost">
+
               <h4 class="fw-bold mb-2 text-uppercase text-center">Create your Post</h4>
           
               <div class="mb-3">
@@ -48,8 +52,10 @@
                   type="text" 
                   class="form-control" 
                   id="postTitle" 
-                  v-model.lazy="post.postTitle">
+                  v-model.lazy="post.postTitle"
+                  required>
               </div>
+
               <div class="mb-3">
                 <label for="postText" class="form-label">Text</label>
                 <textarea 
@@ -57,9 +63,11 @@
                   id="postText" 
                   rows="5" 
                   placeholder="Write your post text..."
-                  v-model.lazy="post.postText">
+                  v-model.lazy="post.postText"
+                  required>
                 </textarea>
               </div>
+
               <div class="mb-3">
                 <label 
                   for="postCategory" 
@@ -70,7 +78,8 @@
                   class="form-select" 
                   id="postCategory" 
                   aria-label="Default select example"
-                  v-model.lazy="post.postCategory">
+                  v-model.lazy="post.postCategory"
+                  required>
 
                   <option selected value="placeholder">Select the category of your post</option>
                   <option value="Family">Family</option>
@@ -85,12 +94,11 @@
               <button
                 id="submitButton" 
                 class="btn btn-outline-light btn-lg px-5" 
-                type="submit"
-                @click="createPost">
+                type="submit">
                   Submit
               </button>
               
-            </div>
+            </form>
           </div>
         </div>
       </div>

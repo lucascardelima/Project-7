@@ -65,7 +65,7 @@
   <div class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card bg-secondary text-white" style="border-radius: 1rem">
+        <div class="card bg-secondary text-white" style="border-radius: 0rem">
           <div class="card-body p-5 text-center">
             <form @submit.prevent="userLogin">
               <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
