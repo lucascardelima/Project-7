@@ -3,7 +3,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #E5E7E9;
+  background-color: #EEE;
   height: 100vh;
 }
 
