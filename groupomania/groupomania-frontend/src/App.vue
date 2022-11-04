@@ -1,19 +1,30 @@
-<script>
-  import NavBar from './components/NavBar.vue'
-
-  export default {
-    components: {
-      NavBar
-    }
-  }
-
-</script>
-
 <style>
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #E5E7E9;
+  height: 100vh;
+}
 
 </style>
 
+<script>
+  import NavBar from './components/NavBar.vue';
+  import FooterBar from './components/FooterBar.vue';
+
+  export default {
+    components: {
+      NavBar,
+      FooterBar
+    }
+  }
+</script>
+
 <template>
-  <NavBar/>
-  <router-view></router-view>
+  <body>
+    <NavBar/>
+    <router-view></router-view>
+    <FooterBar/>
+  </body>
 </template>
