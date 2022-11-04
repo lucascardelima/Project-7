@@ -16,7 +16,8 @@ exports.login = async (req, res, next) => {
 
             if (typeof(user) === 'undefined') {
                 return res.status(401).json({
-                    error: 'User not found'
+                    error: 'User not found',
+                    value: 'email'
                 });
                 
             } else {
@@ -25,7 +26,8 @@ exports.login = async (req, res, next) => {
                       
                         if (!valid) {
                             return res.status(401).json({
-                                error: 'Password incorrect'
+                                error: 'Password incorrect',
+                                value: 'password'
                             });
                         } else {
                             const token = jwt.sign(
@@ -63,7 +65,7 @@ exports.getUsers = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     pool.request().query('SELECT a.userID, a.firstName, a.lastName, a.dateOfBirth, a.email, b.password FROM Users a LEFT JOIN UserCredentials b on a.userID = b.userID').then(
         (users) => {
-            res.status(200).json(users);
+            res.status(200).send(users.recordsets[0]);
         }
     ).catch(
         (error) => {
@@ -81,9 +83,7 @@ exports.getUser = async (req, res, next) => {
     request.input('userID', sql.NVarChar, req.body.userID)
     .execute('getUser').then(
         (user) => {
-            res.status(200).json({
-                user: user
-            })
+            res.status(200).send(user.recordsets[0])
         }
     ).catch (
         (error) => {
@@ -101,39 +101,53 @@ exports.signup = async (req, res, next) => {
     const userID = crypto.randomUUID();
     const currentDate = new Date();
 
-    bcrypt.hash(req.body.password, 10).then(
-        (hash) => {
-            request.input('userID', sql.NVarChar, userID)
-            .input('firstName', sql.NVarChar, req.body.firstName)
-            .input('lastName', sql.NVarChar, req.body.lastName)
-            .input('dateOfBirth', sql.DateTime, new Date(req.body.dateOfBirth))
-            .input('email', sql.NVarChar, req.body.email)
-            .input('password', sql.NVarChar(60), hash)
-            .input('currentDate', sql.DateTime, currentDate)
-            .input('preference', sql.NVarChar, req.body.preference)
-            .execute('insertUser').then(
-                () => {
-                    res.status(200).json({
-                        success: 'User created successfully'
-                    })
+    bcrypt.genSalt(10).then(
+        (salt) => {
+            bcrypt.hash(req.body.password, salt).then(
+                (hash) => {
+                    console.log(hash);
+                    console.log(req.body.preference.toString());
+                    request.input('userID', sql.NVarChar, userID)
+                    .input('firstName', sql.NVarChar, req.body.firstName)
+                    .input('lastName', sql.NVarChar, req.body.lastName)
+                    .input('dateOfBirth', sql.DateTime, new Date(req.body.dateOfBirth))
+                    .input('email', sql.NVarChar, req.body.email)
+                    .input('password', sql.NVarChar(60), hash)
+                    .input('currentDate', sql.DateTime, currentDate)
+                    .input('preference', sql.NVarChar, req.body.preference.toString())
+                    .execute('insertUser').then(
+                        () => {
+                            res.status(200).json({
+                                success: 'User created successfully'
+                            })
+                        }
+                    ).catch (
+                        (error) => {
+                            res.status(500).json({
+                                error: error,
+                                message: 'SQL Server Error'
+                            })
+                            sql.close();
+                        }
+                    )
                 }
-            ).catch (
+            ).catch(
                 (error) => {
                     res.status(500).json({
-                        error: error
+                        error: error,
+                        message: 'Bcrypt Error'
                     })
-                    sql.close();
                 }
-            )
+            )          
         }
     ).catch(
         (error) => {
             res.status(500).json({
-                error: error
+                error: error,
+                message: 'Salt Error'
             })
-            sql.close();
         }
-    )     
+    )   
 };
 
 exports.updateUser = async (req, res, next) => {
