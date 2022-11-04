@@ -89,9 +89,7 @@ exports.getPosts = async (req, res, next) => {
     request.input('postCategory', sql.NVarChar, req.body.postCategory)
     .execute('getPosts').then(
         (posts) => {
-            res.status(200).json({
-                result: posts
-            })
+            res.status(200).send(posts.recordsets[0])
         }
     ).catch (
         (error) => {

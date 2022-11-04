@@ -12,9 +12,7 @@ exports.getLikes = async (req, res, next) => {
 
     request.execute('getLikes').then(
         (likes) => {
-            res.status(200).json({
-                likes: likes
-            })
+            res.status(200).send(likes.recordsets[0])
         }
     ).catch(
         (error) => {
@@ -38,9 +36,7 @@ exports.checkUserLike = async (req, res, next) => {
     .input('postID', sql.NVarChar, req.body.postID)
     .execute('checkUserLike').then(
         (result) => {
-            res.status(200).json({
-                result: result
-            })
+            res.status(200).send(result.recordsets[0])
         }
     ).catch(
         (error) => {
