@@ -2,22 +2,50 @@
 
 </style>
 
-<script>
+<script >
+  import axios from 'axios';
   import PostCard from '../components/PostCard.vue'
-  
+  axios.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`
+  axios.defaults.headers.post['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`
+    
   export default {
     name: 'HomePage',
     data() {
       return {
-
+        requestDetails: {
+          postCategory: sessionStorage.getItem('postCategory'),
+          userID: sessionStorage.getItem('userID'),
+          token: sessionStorage.getItem('token')
+        },
+        posts: []
       }
+    },
+    mounted() {
+      console.log(this.requestDetails)
+      axios.post('http://localhost:3000/api/posts/getposts', this.requestDetails).then(
+        (response) => {
+          console.log(response.data);
+          this.addPosts(response.data);
+        }
+    ).catch(
+      (error) => {
+        console.log(error)
+      }
+    )
     },
     components: {
       PostCard
     },
     methods: {
       getPosts() {
-        axio.get('')
+        axios.get('http://localhost:3000/api/posts/getposts', this.requestDetails, {
+          headers: {
+            'Authorization': 'Bearer ' + this.token 
+          }
+        })
+      },
+      addPosts(posts) {
+        this.posts.push(posts)
       }
     }
   }
@@ -30,7 +58,9 @@
     <div class="col-md-8">
       <div class="feed p-2">
            
-        <PostCard/>
+        <PostCard v-for="post in posts[0]"
+                  :post="post"
+                  :key="post.postID"/>
 
       </div>
     </div>
