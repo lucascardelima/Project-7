@@ -42,8 +42,38 @@
         }
       }
     },
+    computed: {
+      postTenure() {
+        let postDate = new Date(this.post.postCreationDate);
+        let currentDate = new Date();
+
+        let difference = 0
+        let label = ''
+
+        let postDuration = currentDate - postDate; 
+
+   
+
+        if (postDuration < 3600000) {
+          difference = Math.round((postDuration / 60000))
+          label = toString(difference) + ' Min'
+          
+        } else if (postDuration >= 3600000 && postDuration < 86400000) {
+          difference = Math.round((postDuration / 3600000))
+          label = String(difference) + ' Hours'
+
+        } else {
+          difference = Math.round((postDuration / 86400000))
+          label = String(difference) + ' Days'
+        }
+
+        return label    
+    
+      }
+    },
     mounted() {
       this.userCheck();
+      
     }
   }
 
@@ -63,15 +93,19 @@
             width="45">
           
           <div class="d-flex flex-column flex-wrap ml-2">
-            <span class="font-weight-bold"> {{ post.postTitle }}</span>
-            <span class="text-black-50 time"
-                  v-if="isOwner">Owner</span>
+            <span class="font-weight-bold px-2"> {{ post.firstName + ' ' + post.lastName }}</span>
+            <span class="text-black-50 time px-2"
+                  > {{ postTenure }}</span>
           </div>
         </div>
 
-        <div class="feed-icon px-2">
-          <i class="fa fa-ellipsis-v text-black-50"></i>
+        <div>
+          <span class="font-weight-bold px-2 text-capitalize">{{ post.postCategory }}</span>
         </div>
+
+        <!-- <div class="feed-icon px-2">
+          <i class="fa fa-ellipsis-v text-black-50"></i>
+        </div> -->
 
       </div>
     </div>
