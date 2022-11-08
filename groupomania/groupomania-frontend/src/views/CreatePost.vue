@@ -34,7 +34,6 @@
         this.postDetails.postTitle = '';
         this.postDetails.postText = '';
         this.postDetails.postCategory = '';
-        
       }
     }
   }
