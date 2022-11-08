@@ -28,7 +28,8 @@
         },
         errorHandling: {
           errorMessage: ''
-        }
+        },
+        isLoggedIn: false
       }
     },
     methods: {
@@ -39,7 +40,7 @@
           window.sessionStorage.setItem('userID', response.data.userID);
           window.sessionStorage.setItem('preference', response.data.preference);
           window.sessionStorage.setItem('email', response.data.email);
-          window.sessionStorage.setItem('fistName', response.data.firstName);
+          window.sessionStorage.setItem('firstName', response.data.firstName);
           window.sessionStorage.setItem('lastName', response.data.lastName);
           this.$router.push('/')
           }
@@ -51,14 +52,16 @@
           } else if (error.response.data.value === 'password') {
             document.querySelector("#password").style.border = "1px solid #FF0000";
           }
-          console.log(error.response.data.error);
-          
         })
       },
       clearErrorHandling() {
         document.querySelector(".error-handling").style.display = 'none';
         document.querySelector("#email").style.border = "1px solid #ced4da";
         document.querySelector("#password").style.border = "1px solid #ced4da";
+      },
+      toggleIsLoggedIn() {
+        this.isLoggedIn = true;
+        this.$emit('toggle-is-loggeded-in', this.isLoggedIn)
       }
     }
   }
@@ -123,6 +126,7 @@
               <button 
                 class="btn btn-outline-light btn-lg px-5" 
                 type="submit"
+                
                 >
                   Login
               </button>
