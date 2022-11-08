@@ -14,7 +14,7 @@
     name: 'CreatePost',
     data() {
       return {
-        post: {
+        postDetails: {
           postTitle:'',
           postText: '',
           postCategory: '',
@@ -25,11 +25,16 @@
     },
     methods: {
       createPost() {
-        this.post.userID = sessionStorage.getItem('userID');
-        this.post.token = sessionStorage.getItem('token');
-        axios.post('http://localhost:3000/api/posts/createpost', this.post)
+        this.postDetails.userID = sessionStorage.getItem('userID');
+        this.postDetails.token = sessionStorage.getItem('token');
+        axios.post('http://localhost:3000/api/posts/createpost', this.postDetails)
           .then(response => console.log(response.data))
           .catch(error => console.log(error))
+
+        this.postDetails.postTitle = '';
+        this.postDetails.postText = '';
+        this.postDetails.postCategory = '';
+        
       }
     }
   }
@@ -52,7 +57,7 @@
                   type="text" 
                   class="form-control" 
                   id="postTitle" 
-                  v-model.lazy="post.postTitle"
+                  v-model.lazy="postDetails.postTitle"
                   required>
               </div>
 
@@ -63,7 +68,7 @@
                   id="postText" 
                   rows="5" 
                   placeholder="Write your post text..."
-                  v-model.lazy="post.postText"
+                  v-model.lazy="postDetails.postText"
                   required>
                 </textarea>
               </div>
@@ -78,16 +83,16 @@
                   class="form-select" 
                   id="postCategory" 
                   aria-label="Default select example"
-                  v-model.lazy="post.postCategory"
+                  v-model.lazy="postDetails.postCategory"
                   required>
 
                   <option selected value="placeholder">Select the category of your post</option>
-                  <option value="Family">Family</option>
-                  <option value="Tech">Tech</option>
-                  <option value="Art">Art</option>
-                  <option value="Kids">Kids</option>
-                  <option value="Cooking">Cooking</option>
-                  <option value="Traveling">Traveling</option>
+                  <option value="family">Family</option>
+                  <option value="tech">Tech</option>
+                  <option value="art">Art</option>
+                  <option value="kids">Kids</option>
+                  <option value="cooking">Cooking</option>
+                  <option value="traveling">Traveling</option>
                 </select>
               </div>
               
