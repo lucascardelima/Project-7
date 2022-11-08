@@ -87,6 +87,7 @@ exports.getPosts = async (req, res, next) => {
     let request = new sql.Request(pool);
 
     request.input('postCategory', sql.NVarChar, req.body.postCategory)
+    .input('userID', sql.NVarChar, req.body.userID)
     .execute('getPosts').then(
         (posts) => {
             res.status(200).send(posts.recordsets[0])

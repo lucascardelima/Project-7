@@ -46,6 +46,10 @@
             (response) => {
               window.sessionStorage.setItem('token', response.data.token);
               window.sessionStorage.setItem('userID', response.data.userID);
+              window.sessionStorage.setItem('preference', response.data.preference);
+              window.sessionStorage.setItem('email', response.data.email);
+              window.sessionStorage.setItem('fistName', response.data.firstName);
+              window.sessionStorage.setItem('lastName', response.data.lastName);
               this.$router.push('/');
             }
           ).catch(
