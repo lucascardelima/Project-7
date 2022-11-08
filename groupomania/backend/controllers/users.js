@@ -13,6 +13,7 @@ exports.login = async (req, res, next) => {
     .execute('loginUser').then(
         (result) => {
             const user = result.recordset[0];
+            console.log(user);
 
             if (typeof(user) === 'undefined') {
                 return res.status(401).json({
@@ -38,7 +39,11 @@ exports.login = async (req, res, next) => {
                             res.status(200).json({
                                 message: 'Login successfully',
                                 userID: user.userID,
-                                token: token
+                                token: token,
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                preference: user.preference,
+                                email: user.email
                             });
                         }
                     }

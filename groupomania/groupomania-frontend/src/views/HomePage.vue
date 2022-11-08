@@ -13,7 +13,7 @@
     data() {
       return {
         requestDetails: {
-          postCategory: sessionStorage.getItem('postCategory'),
+          postCategory: sessionStorage.getItem('preference'),
           userID: sessionStorage.getItem('userID'),
           token: sessionStorage.getItem('token')
         },
@@ -21,10 +21,8 @@
       }
     },
     mounted() {
-      console.log(this.requestDetails)
       axios.post('http://localhost:3000/api/posts/getposts', this.requestDetails).then(
         (response) => {
-          console.log(response.data);
           this.addPosts(response.data);
         }
     ).catch(
