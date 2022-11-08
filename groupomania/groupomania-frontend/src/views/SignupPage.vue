@@ -48,7 +48,7 @@
               window.sessionStorage.setItem('userID', response.data.userID);
               window.sessionStorage.setItem('preference', response.data.preference);
               window.sessionStorage.setItem('email', response.data.email);
-              window.sessionStorage.setItem('fistName', response.data.firstName);
+              window.sessionStorage.setItem('firstName', response.data.firstName);
               window.sessionStorage.setItem('lastName', response.data.lastName);
               this.$router.push('/');
             }
@@ -69,9 +69,6 @@
           document.querySelector('#maxSign').style.color = '#FF7373';
           document.querySelector('#submitButton').disabled = true;
          }
-      },
-      test() {
-        console.log(this.userDetails);
       }
     }
   }
