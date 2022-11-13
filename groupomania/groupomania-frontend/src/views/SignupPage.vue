@@ -20,8 +20,14 @@
 
 <script>
   import axios from 'axios'
+  import { useAuthStore } from '../stores/AuthStore'
+
   export default {
     name: 'UserSignup',
+    setup() {
+      const authStore = useAuthStore();
+      return { authStore }
+    },
     data() {
       return {
         userDetails: {
@@ -44,12 +50,13 @@
           axios.post('http://localhost:3000/api/auth/login', this.userDetails)
           .then(
             (response) => {
-              window.sessionStorage.setItem('token', response.data.token);
-              window.sessionStorage.setItem('userID', response.data.userID);
-              window.sessionStorage.setItem('preference', response.data.preference);
-              window.sessionStorage.setItem('email', response.data.email);
-              window.sessionStorage.setItem('firstName', response.data.firstName);
-              window.sessionStorage.setItem('lastName', response.data.lastName);
+              window.localStorage.setItem('token', response.data.token);
+              window.localStorage.setItem('userID', response.data.userID);
+              window.localStorage.setItem('preference', response.data.preference);
+              window.localStorage.setItem('email', response.data.email);
+              window.localStorage.setItem('firstName', response.data.firstName);
+              window.localStorage.setItem('lastName', response.data.lastName);
+              this.authStore.isLoggedIn = true;
               this.$router.push('/');
             }
           ).catch(
@@ -79,16 +86,22 @@
   <div class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card bg-secondary text-white" style="border-radius: 0rem">
+        <div
+          class="card bg-secondary text-white"
+          style="border-radius: 0rem">
           <div class="card-body p-5 text-center">
             <form  @submit.prevent="userSignup">
-              <h2 class="fw-bold mb-2 text-uppercase">Signup</h2>
+              <h2
+                class="fw-bold mb-2 text-uppercase">Signup</h2>
               <p class="text-white-50 mb-5">
                 Please enter your details
               </p>
 
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="firstName">First Name</label>
+                <label
+                  class="form-label"
+                  for="firstName">First
+                  Name</label>
                 <input
                   type="text"
                   id="firstName"
@@ -99,7 +112,11 @@
               </div>
 
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="lastName">Last Name</label>
+                <label
+                  class="form-label"
+                  for="lastName">
+                  Last Name
+                </label>
                 <input
                   type="text"
                   id="lastName"
@@ -109,7 +126,9 @@
                 />
               </div>
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="typeEmailX">Email</label>
+                <label
+                  class="form-label"
+                  for="typeEmailX">Email</label>
                 <input
                   type="email"
                   id="typeEmailX"
@@ -120,7 +139,9 @@
               </div>
 
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="typePasswordX">Password</label>
+                <label
+                  class="form-label"
+                  for="typePasswordX">Password</label>
                 <input
                   type="password"
                   id="typePasswordX"
@@ -131,7 +152,12 @@
               </div>
 
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="dateOfBirth" >Date of Birth</label>
+                <label
+                  class="form-label"
+                  for="dateOfBirth"
+                  >Date
+                  of
+                  Birth</label>
                 <input
                   type="date"
                   id="dateOfBirth"
@@ -141,8 +167,11 @@
                 /> 
               </div>
 
-              <div class="form-outline form-white mb-4" id="preferenceBox">
-                <hr style="width: 100%; height: 2px">
+              <div
+                class="form-outline form-white mb-4"
+                id="preferenceBox">
+                <hr
+                  style="width: 100%; height: 2px">
                 <label 
                   class="form-label" 
                   for="preferenceBox" 
