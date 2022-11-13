@@ -5,17 +5,17 @@
 <script >
   import axios from 'axios';
   import PostCard from '../components/PostCard.vue'
-  axios.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`
-  axios.defaults.headers.post['Authorization'] = `Bearer ${sessionStorage.getItem('token')}`
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+  axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
     
   export default {
     name: 'HomePage',
     data() {
       return {
         requestDetails: {
-          postCategory: sessionStorage.getItem('preference'),
-          userID: sessionStorage.getItem('userID'),
-          token: sessionStorage.getItem('token')
+          postCategory: localStorage.getItem('preference'),
+          userID: localStorage.getItem('userID'),
+          token: localStorage.getItem('token')
         },
         posts: []
       }
