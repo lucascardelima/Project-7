@@ -14,7 +14,13 @@
 
 <script>
   import axios from 'axios'
+  import { useAuthStore } from '../stores/AuthStore'
+
   export default {
+    setup() {
+      const authStore = useAuthStore();
+      return { authStore }
+    },
     name: 'UserLogin',
     data() {
       return {
@@ -24,25 +30,30 @@
         },
         userSession: {
           userID: '',
-          userToken: ''
+          userToken: '',
+          checkBox: window.localStorage.getItem('checked'),
+          email: window.localStorage.getItem('email')
         },
         errorHandling: {
           errorMessage: ''
-        },
-        isLoggedIn: false
+        }
       }
     },
     methods: {
       userLogin() {
         axios.post('http://localhost:3000/api/auth/login', this.userDetails)
         .then((response) => {
-          window.sessionStorage.setItem('token', response.data.token);
-          window.sessionStorage.setItem('userID', response.data.userID);
-          window.sessionStorage.setItem('preference', response.data.preference);
-          window.sessionStorage.setItem('email', response.data.email);
-          window.sessionStorage.setItem('firstName', response.data.firstName);
-          window.sessionStorage.setItem('lastName', response.data.lastName);
+          window.localStorage.setItem('token', response.data.token);
+          window.localStorage.setItem('userID', response.data.userID);
+          window.localStorage.setItem('preference', response.data.preference);
+          window.localStorage.setItem('email', response.data.email);
+          window.localStorage.setItem('firstName', response.data.firstName);
+          window.localStorage.setItem('lastName', response.data.lastName);
+          window.localStorage.setItem('isLoggedIn', true);
+          this.authStore.firstName = response.data.firstName;
+          this.authStore.isLoggedIn = true;
           this.$router.push('/')
+
           }
         ).catch(error => {
           document.querySelector(".error-handling").style.display = 'block';
@@ -54,15 +65,24 @@
           }
         })
       },
+      rememberMe() {
+        const rememberMeChecked = document.querySelector('#rememberMe');
+
+        if (rememberMeChecked.checked) {
+          window.localStorage.setItem('email', this.userDetails.email);
+          window.localStorage.setItem('checked', rememberMeChecked.value);
+        } else {
+          window.localStorage.clear();
+        }
+      },
       clearErrorHandling() {
         document.querySelector(".error-handling").style.display = 'none';
         document.querySelector("#email").style.border = "1px solid #ced4da";
         document.querySelector("#password").style.border = "1px solid #ced4da";
-      },
-      toggleIsLoggedIn() {
-        this.isLoggedIn = true;
-        this.$emit('toggle-is-loggeded-in', this.isLoggedIn)
       }
+    },
+    mounted() {
+      this.userDetails.email = window.localStorage.getItem('email');
     }
   }
 
@@ -81,18 +101,22 @@
               </p>
 
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="email">Email</label>
+                <label
+                  class="form-label"
+                  for="email">Email</label>
                 <input
                   type="email"
                   id="email"
                   class="form-control form-control-lg"
-                  v-model.lazy="userDetails.email"
+                  v-model="userDetails.email"
                   @click="clearErrorHandling"
                   required>
               </div>
 
               <div class="form-outline form-white mb-4">
-                <label class="form-label" for="password">Password</label>
+                <label
+                  class="form-label"
+                  for="password">Password</label>
                 <input
                   type="password"
                   id="password"
@@ -104,8 +128,16 @@
 
               <div class="form-outline form-white mb-4">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" id="rememberMe" value="rememberme">
-                  <label class="form-check-label" for="rememberMe">Remember Me</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="rememberMe"
+                    value="checked"
+                    :checked="userSession.checkBox">
+                  <label
+                    class="form-check-label"
+                    for="rememberMe">Remember
+                    Me</label>
                 </div>
               </div>
 
@@ -126,7 +158,7 @@
               <button 
                 class="btn btn-outline-light btn-lg px-5" 
                 type="submit"
-                
+                @click="rememberMe()"
                 >
                   Login
               </button>
