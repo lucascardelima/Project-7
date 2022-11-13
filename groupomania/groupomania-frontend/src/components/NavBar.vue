@@ -24,7 +24,7 @@
             justify-content: space-between;
         }
         li {
-            padding: 0px 20px;
+            padding: 0px 15px;
             text-decoration: none;
         }
         ul {
@@ -46,52 +46,62 @@
     }
     #signInButton:hover {
         text-decoration: underline;
-    }   
+    }
+    .vl{
+        border-left: 2px solid white;
+        padding: 10px
+    } 
+
 </style>
 
 <script>
+import { useAuthStore } from '../stores/AuthStore'
 
 export default {
+    
+    setup() {
+        const authStore = useAuthStore();
+        return { authStore }
+    },
     methods: {
         logOut() {
-            window.sessionStorage.clear();
-            this.isLoggedIn();
-        },
-        isLoggedIn() {
-            if (window.sessionStorage.getItem('userID')) {
-                this.isLogged = true
+            if (window.localStorage.getItem('checked') === 'checked') {
+                window.localStorage.removeItem('token');
+                window.localStorage.removeItem('userID');
+                window.localStorage.removeItem('preference');
+                window.localStorage.removeItem('firstName');
+                window.localStorage.removeItem('lastName');
+                window.localStorage.removeItem('isLoggedIn');
+                this.authStore.$reset();
+                this.$router.push('/loginpage');
             } else {
-                this.isLogged = false
+                window.localStorage.clear();
+                this.authStore.$reset();
+                this.$router.push('/loginpage');
             }
         }
     },
     data() {
         return {
             userDetails: {
-                firstName: window.sessionStorage.getItem('firstName'),
-                lastName: window.sessionStorage.getItem('lastName'),
-                userID: window.sessionStorage.getItem('userID')
+                firstName: window.localStorage.getItem('firstName'),
+                lastName: window.localStorage.getItem('lastName'),
+                userID: window.localStorage.getItem('userID')
             },
-            isLogged: window.sessionStorage.getItem('isLoggedIn')
+            isLogged: true
         }
     },
     computed: {
         userSalutation() {
-            return 'Hi, ' + this.userDetails.firstName;
+            return 'Hi, ' + this.authStore.firstName;
         }
-    },
-    mounted() {
-        this.isLoggedIn();
-    },
-    updated() {
-        this.isLoggedIn();
     }
 }
 
 </script>
 
 <template>
-    <nav class="navbar navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-dark bg-dark fixed-top shadow-lg">
         <div class="container-fluid">
             <router-link 
                 class="navbar-brand" 
@@ -102,7 +112,7 @@ export default {
             <div class="navbar-menu-inline">
                 <ul id="navbarMenuInline">
                     <li class="list-item"
-                        v-if="!isLogged"
+                        v-if="!this.authStore.isLoggedIn"
                         > Hi, 
                             <router-link 
                                 id="signInButton"
@@ -111,24 +121,31 @@ export default {
                             </router-link>
                     </li>
                     <li class="list-item"
-                        v-if="isLogged"
+                        v-if="this.authStore.isLoggedIn"
                         >
                         {{ userSalutation }}
                     </li>
 
-                    <li>
+                    <li class="vl"></li>
+
+                    <li class="list-item"
+                        v-if="this.authStore.isLoggedIn">
                         <router-link 
                             class="navbar-link" 
                             to="/">
-                            Home
+                            <font-awesome-icon icon="fa-solid fa-house" />
                         </router-link>
                     </li>
 
-                    <li>
+                    <li class="list-item"
+                        v-if="this.authStore.isLoggedIn"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        title="Create a post">
                         <router-link 
                             class="navbar-link"
                             to="/createpost">
-                            Create Post
+                            <font-awesome-icon icon="fa-solid fa-plus" />
                         </router-link>
                     </li>
 
@@ -136,9 +153,9 @@ export default {
                         <router-link 
                             class="navbar-link"
                             to="/"
-                            v-if="isLogged"
+                            v-if="this.authStore.isLoggedIn"
                             @click="logOut">
-                            Logout
+                            <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
                         </router-link>
                     </li>
                 </ul>
@@ -146,10 +163,19 @@ export default {
 
             <div id="navbarMenuOffcanvas">
                 
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+                <button
+                  class="navbar-toggler"
+                  type="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasDarkNavbar"
+                  aria-controls="offcanvasDarkNavbar">
                 <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+                <div
+                  class="offcanvas offcanvas-end text-bg-dark"
+                  tabindex="-1"
+                  id="offcanvasDarkNavbar"
+                  aria-labelledby="offcanvasDarkNavbarLabel">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" 
                             id="offcanvasDarkNavbarLabel"
@@ -166,7 +192,11 @@ export default {
                             v-if="isLogged">
                             {{ userSalutation }}
                         </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                       <button
+                          type="button"
+                          class="btn-close btn-close-white"
+                          data-bs-dismiss="offcanvas"
+                          aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
