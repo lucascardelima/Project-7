@@ -63,7 +63,7 @@ exports.updatePost = async (req, res, next) => {
 exports.deletePost = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
-    
+        
     request.input('postID', sql.NVarChar, req.body.postID)
     .input('userID', sql.NVarChar, req.body.userID)
     .execute('deletePost').then(
@@ -89,6 +89,25 @@ exports.getPosts = async (req, res, next) => {
     request.input('postCategory', sql.NVarChar, req.body.postCategory)
     .input('userID', sql.NVarChar, req.body.userID)
     .execute('getPosts').then(
+        (posts) => {
+            res.status(200).send(posts.recordsets[0])
+        }
+    ).catch (
+        (error) => {
+            res.status(500).json({
+                error: error 
+            })
+            sql.close();
+        }
+    )
+}
+
+exports.getPost = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+
+    request.input('postID', sql.NVarChar, req.body.postID)
+    .execute('getPost').then(
         (posts) => {
             res.status(200).send(posts.recordsets[0])
         }
