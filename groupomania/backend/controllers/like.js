@@ -10,9 +10,14 @@ exports.getLikes = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
 
-    request.execute('getLikes').then(
+    request.input('postID', sql.NVarChar, req.body.data.postID)
+    .execute('getLikes').then(
         (likes) => {
-            res.status(200).send(likes.recordsets[0])
+            console.log('primeiro objeto')
+            console.log(likes.recordsets[0][0])
+            console.log('segundo objeto')
+            console.log(likes.recordsets[1][0])
+            res.status(200).send(likes.recordsets)
         }
     ).catch(
         (error) => {
@@ -54,17 +59,15 @@ exports.checkUserLike = async (req, res, next) => {
 exports.like = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
-    const likeID = crypto.randomUUID();
+    const likeID = crypto.randomUUID(); 
 
-    request.input('userID', sql.NVarChar, req.body.userID)
-    .input('postID', sql.NVarChar, req.body.postID)
+    request.input('userID', sql.NVarChar, req.body.data.userID)
+    .input('postID', sql.NVarChar, req.body.data.postID)
     .input('isLiked', sql.Bit, 1)
     .input('likeID', sql.NVarChar, likeID)
     .execute('postLike').then(
-        () => {
-            res.status(200).json({
-                success: 'Post liked successfully'
-            })
+        (result) => {
+            res.status(200).send(result.recordset[0])
         }
     ).catch(
         (error) => {
@@ -89,10 +92,8 @@ exports.dislike = async (req, res, next) => {
     request.input('userID', sql.NVarChar, req.body.userID)
     .input('postID', sql.NVarChar, req.body.postID)
     .execute('postDislike').then(
-        () => {
-            res.status(200).json({
-                success: 'Post disliked successfully'
-            })
+        (result) => {
+            res.status(200).send(result.recordset[0])
         }
     ).catch(
         (error) => {
