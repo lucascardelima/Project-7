@@ -5,7 +5,8 @@ const postsCtrl = require('../controllers/posts');
 
 router.post('/getposts', postsCtrl.getPosts);
 router.post('/createpost', postsCtrl.createPost);
-router.post('/deletepost', postsCtrl.deletePost);
-router.post('/updatepost', postsCtrl.updatePost);
+router.delete('/deletepost', postsCtrl.deletePost);
+router.put('/updatepost', postsCtrl.updatePost);
+router.post('/getpost', postsCtrl.getPost);
 
 module.exports = router;
