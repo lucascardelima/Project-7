@@ -25,8 +25,8 @@
     },
     methods: {
       createPost() {
-        this.postDetails.userID = sessionStorage.getItem('userID');
-        this.postDetails.token = sessionStorage.getItem('token');
+        this.postDetails.userID = localStorage.getItem('userID');
+        this.postDetails.token = localStorage.getItem('token');
         axios.post('http://localhost:3000/api/posts/createpost', this.postDetails)
           .then(response => console.log(response.data))
           .catch(error => console.log(error))
@@ -34,6 +34,7 @@
         this.postDetails.postTitle = '';
         this.postDetails.postText = '';
         this.postDetails.postCategory = '';
+        this.$router.push('/')
       }
     }
   }
