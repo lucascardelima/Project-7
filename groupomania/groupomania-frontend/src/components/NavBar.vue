@@ -179,7 +179,7 @@ export default {
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" 
                             id="offcanvasDarkNavbarLabel"
-                            v-if="!isLogged"
+                            v-if="!this.authStore.isLoggedIn"
                             data-bs-dismiss="offcanvas"> Hi, 
                             <router-link 
                                 id="signInButton"
@@ -189,7 +189,7 @@ export default {
                         </h5>
                         <h5 class="offcanvas-title" 
                             id="offcanvasDarkNavbarLabel"
-                            v-if="isLogged">
+                            v-if="this.authStore.isLoggedIn">
                             {{ userSalutation }}
                         </h5>
                        <button
@@ -201,7 +201,8 @@ export default {
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item"
-                                data-bs-dismiss="offcanvas">
+                                data-bs-dismiss="offcanvas"
+                                v-if="this.authStore.isLoggedIn">
                                 <router-link 
                                     class="nav-link active" 
                                     aria-current="page"
@@ -212,7 +213,8 @@ export default {
                             </li>
 
                             <li class="nav-item"
-                                data-bs-dismiss="offcanvas">
+                                data-bs-dismiss="offcanvas"
+                                v-if="this.authStore.isLoggedIn">
                                 <router-link 
                                     class="nav-link"
                                     to="/createpost">
@@ -220,10 +222,13 @@ export default {
                                 </router-link>
                             </li>
 
-                            <li><hr style="width: 100%; height: 2px"></li>
+                            <li v-if="this.authStore.isLoggedIn">
+                                <hr style="width: 100%; height: 2px">
+                            </li>
 
                             <li class="nav-item"
-                                data-bs-dismiss="offcanvas">
+                                data-bs-dismiss="offcanvas"
+                                v-if="this.authStore.isLoggedIn">
                                 <router-link 
                                     class="nav-link"
                                     to="/"
