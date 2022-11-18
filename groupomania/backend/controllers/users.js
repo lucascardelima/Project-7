@@ -13,7 +13,6 @@ exports.login = async (req, res, next) => {
     .execute('loginUser').then(
         (result) => {
             const user = result.recordset[0];
-            console.log(user);
 
             if (typeof(user) === 'undefined') {
                 return res.status(401).json({
