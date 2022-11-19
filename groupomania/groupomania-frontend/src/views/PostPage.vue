@@ -118,6 +118,9 @@ export default {
         }
       )
     },
+    getComments() {
+
+    },
     createComment() {
       axios.post('http://localhost:3000/api/comments/createcomment', {
         data: {
@@ -128,7 +131,7 @@ export default {
       }).then(
         (response) => {
           this.commentsData.commentText = ''
-          console.log(response.data.success)
+          this.countsOfComments = response.data[0]['quantity']
         }
       ).catch(
         (error) => {
