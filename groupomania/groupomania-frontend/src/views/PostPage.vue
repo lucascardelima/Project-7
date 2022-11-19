@@ -16,6 +16,9 @@ export default {
         postCreationDate: '',
         userID: ''
       },
+      commentsData: {
+        commentText: ''      
+      },
       isOwner: false,
       isLiked: false,
       countsOfLikes: 0,
@@ -114,6 +117,24 @@ export default {
           this.userLikedCheck()
         }
       )
+    },
+    createComment() {
+      axios.post('http://localhost:3000/api/comments/createcomment', {
+        data: {
+          postID: this.postData.postID,
+          userID: localStorage.getItem('userID'),
+          commentText: this.commentsData.commentText
+        }
+      }).then(
+        (response) => {
+          this.commentsData.commentText = ''
+          console.log(response.data.success)
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
     }
   },
   computed: {
@@ -185,10 +206,6 @@ export default {
                   </div>
                 </div>
 
-                <div>
-                  
-                </div>
-
                 <div v-if="this.isOwner" >
                   <a class="px-3" 
                     type="button"
@@ -254,6 +271,28 @@ export default {
             </div>
           </div>
         </div>
+
+        <div class="container bg-white mt-3 rounded-1 border shadow">
+          <div class="d-flex flex-column">
+            <div class="form-floating mt-3 mb-2">
+              <textarea 
+                v-model="commentsData.commentText"
+                class="form-control" 
+                placeholder="Leave a comment here" 
+                id="floatingTextarea"></textarea>
+              <label for="floatingTextarea">Comments</label>
+            </div>
+            <div class="d-flex justify-content-end ">
+              <button class=" btn btn-secondary btn-sm m-2 mb-3"
+                      :disabled="!commentsData.commentText"
+                      @click="createComment">Comment</button>
+            </div>
+          
+          </div>
+
+        </div>
+        
+        
 
       </div>
     </div>
