@@ -27,9 +27,9 @@ exports.createComment = async (req, res, next) => {
     const currentDate = new Date();
 
     request.input('commentID', sql.NVarChar, commentID)
-    .input('postID', sql.NVarChar, req.body.postID)
-    .input('userID', sql.NVarChar, req.body.userID)
-    .input('commentText', sql.NVarChar, req.body.commentText)
+    .input('postID', sql.NVarChar, req.body.data.postID)
+    .input('userID', sql.NVarChar, req.body.data.userID)
+    .input('commentText', sql.NVarChar, req.body.data.commentText)
     .input('commentCreationDate', sql.DateTime, currentDate)
     .input('commentEditDate', sql.DateTime, currentDate)
     .execute('createComment').then(
