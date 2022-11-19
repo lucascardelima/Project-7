@@ -33,10 +33,8 @@ exports.createComment = async (req, res, next) => {
     .input('commentCreationDate', sql.DateTime, currentDate)
     .input('commentEditDate', sql.DateTime, currentDate)
     .execute('createComment').then(
-        () => {
-            res.status(200).json({
-                success: 'Comment created successfully'
-            })
+        (response) => {
+            res.status(200).send(response.recordsets[0])
         }
     ).catch (
         (error) => {
