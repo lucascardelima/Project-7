@@ -168,7 +168,7 @@
       postTenure() {
         let postDate = new Date(this.post.postCreationDate);
         let currentDate = new Date();
-        
+
         let difference = 0
         let label = ''
 
@@ -207,7 +207,8 @@
 
 <template>
   
-  <router-link to="" class="card-link text-decoration-none text-reset">
+  <router-link  :to="`/postpage/${post.postID}`" 
+                class="card-link text-decoration-none text-reset">
     <div class="card-container bg-white border mt-4 shadow rounded-1">
 
       <div>
@@ -291,7 +292,7 @@
             
               <router-link
                 :to="`/postpage/${post.postID}`"
-                class="text-reset"
+                class="text-reset text-decoration-none"
                 >Comments
               </router-link> 
               
