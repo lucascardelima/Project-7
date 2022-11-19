@@ -13,10 +13,6 @@ exports.getLikes = async (req, res, next) => {
     request.input('postID', sql.NVarChar, req.body.data.postID)
     .execute('getLikes').then(
         (likes) => {
-            console.log('primeiro objeto')
-            console.log(likes.recordsets[0][0])
-            console.log('segundo objeto')
-            console.log(likes.recordsets[1][0])
             res.status(200).send(likes.recordsets)
         }
     ).catch(
