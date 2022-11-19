@@ -4,6 +4,7 @@ import SignupPage from "../views/SignupPage.vue";
 import HomePage from "../views/HomePage.vue"
 import CreatePost from "../views/CreatePost.vue"
 import EditPost from "../views/EditPost.vue"
+import PostPage from "../views/PostPage.vue"
 
 
 const routes = [
@@ -31,6 +32,12 @@ const routes = [
     path: "/editpost/:postid",
     name: "editpost",
     component: EditPost,
+    props: true
+  },
+  {
+    path: "/postpage/:postid",
+    name: "postpage",
+    component: PostPage,
     props: true
   }
 ];
