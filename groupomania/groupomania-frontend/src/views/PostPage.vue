@@ -163,10 +163,11 @@ export default {
 
 <template>
 
-<div class="container mt-4 mb-5">
+  <div class="container mt-4 mb-5">
     <div class="d-flex justify-content-center row">
       <div class="col-md-8">
-        <router-link to="" class="card-link text-decoration-none text-reset">
+
+        <div class="card-link text-decoration-none text-reset">
           <div class="card-container bg-white border mt-4 shadow rounded-1">
 
             <div>
@@ -230,7 +231,8 @@ export default {
               <span class="py-2" >
                 <a
                   href=""
-                  :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }">
+                  :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }"
+                  @click="likeButton">
                   <font-awesome-icon icon="fa-solid fa-thumbs-up"/>
                 </a>
                 
@@ -251,7 +253,8 @@ export default {
               </div>
             </div>
           </div>
-        </router-link>
+        </div>
+
       </div>
     </div>
   </div>
