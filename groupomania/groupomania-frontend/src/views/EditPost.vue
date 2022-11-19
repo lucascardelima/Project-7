@@ -35,7 +35,6 @@ export default {
         this.postData.postText = response.data[0].postText;
         this.postData.postCategory = response.data[0].postCategory;
         this.postData.userID = response.data[0].userID;
-        console.log(response.data[0])
       }
     ).catch(
       (error) => {
