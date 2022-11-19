@@ -3,10 +3,6 @@
     background-color: #eee
   }
 
-  .time {
-    font-size: 9px !important
-  }
-
   .socials i {
     margin-right: 14px;
     font-size: 17px;
@@ -14,16 +10,12 @@
     cursor: pointer
   }
 
-  .feed-image img {
-    width: 100%;
-    height: auto
-  }
-
   .font-size-custom {
     font-size: 13px;
     display: flex;
     align-items: flex-end;
   }
+
   .card-link:hover .card-container {
     border-color: blue;
   }
@@ -31,6 +23,7 @@
   .card-container {
     border-color: blue;
   }
+
   a {
     color: none;
   }
@@ -65,7 +58,8 @@
         },
         isOwner: false,
         isLiked: false,
-        numberOfCounts: 0
+        countsOfLikes: 0,
+        countsOfComments: 0
       }
     },
     methods: {
@@ -112,9 +106,9 @@
           }).then(
             (response) => {
               if (response.data) {
-                this.numberOfCounts = response.data['quantity']
+                this.countsOfLikes = response.data['quantity']
               } else {
-                this.numberOfCounts = 0
+                this.countsOfLikes = 0
               }
               this.isLiked = false
             }
@@ -132,9 +126,9 @@
           }).then(
             (response) => {
               if (response.data) {
-                this.numberOfCounts = response.data['quantity']
+                this.countsOfLikes = response.data['quantity']
               } else {
-                this.numberOfCounts = 0
+                this.countsOfLikes = 0
               }
               this.isLiked = true
             }
@@ -156,9 +150,9 @@
             this.postData.likes = []
             this.postData.likes.push(response.data[0])
             if (response.data[1][0]) {
-              this.numberOfCounts = response.data[1][0]['quantity']
+              this.countsOfLikes = response.data[1][0]['quantity']
             } else {
-              this.numberOfCounts = 0
+              this.countsOfLikes = 0
             }
             this.userLikedCheck()
             
@@ -174,12 +168,11 @@
       postTenure() {
         let postDate = new Date(this.post.postCreationDate);
         let currentDate = new Date();
-
+        
         let difference = 0
         let label = ''
 
         let postDuration = currentDate - postDate; 
-
    
 
         if (postDuration < 3600000) {
@@ -202,7 +195,6 @@
           }
         }
         return label    
-    
       }
     },
     mounted() {
@@ -286,7 +278,7 @@
             
           </span>
           <div class="py-2 px-3">
-            <span> {{ numberOfCounts }} likes</span>
+            <span> {{ countsOfLikes }} likes</span>
           </div>
 
           <span class="py-2">
@@ -294,8 +286,15 @@
               <font-awesome-icon icon="fa-solid fa-comment"/>
             </a>
           </span>
-          <div class="py-2 px-3">
-            <span> {{ postStore.commentsCount }} comments</span>
+          <div class="py-2 px-3 d-flex flex-row ">
+            <span class="me-2"> {{ countsOfComments }} </span>
+            
+              <router-link
+                :to="`/postpage/${post.postID}`"
+                class="text-reset"
+                >Comments
+              </router-link> 
+              
           </div>
           
       </div>
