@@ -27,6 +27,18 @@
   a {
     color: none;
   }
+
+  #socialContainer {
+    z-index: 10;
+    position: relative;
+  }
+
+  #cardLink {
+    z-index: 1;
+ 
+  }
+
+
  
 
 </style>
@@ -51,6 +63,7 @@
     data() {
       return {
         postData: {
+          postID: this.post.postID,
           title: this.post.postTitle,
           text: this.post.postText,
           category: this.post.postCategory,
@@ -162,6 +175,23 @@
             console.log(error)
           }
         )
+      },
+      getComments() {
+        axios.post('http://localhost:3000/api/comments/getcomments', {
+          postID: this.postData.postID
+        }).then(
+          (response) => {
+            if (response.data[1][0]) {
+              this.countsOfComments = response.data[1][0]['quantity']
+            } else {
+              this.countsOfComments = 0
+            }
+          }
+        ).catch(
+          (error) => {
+            console.log(error)
+          }
+        )
       }
     },
     computed: {
@@ -199,7 +229,9 @@
     },
     mounted() {
       this.getLikes();
-      this.userOwnerCheck();  
+      this.getComments();
+      this.userOwnerCheck();
+      
     }
   }
 
@@ -208,7 +240,8 @@
 <template>
   
   <router-link  :to="`/postpage/${post.postID}`" 
-                class="card-link text-decoration-none text-reset">
+                class="card-link text-decoration-none text-reset"
+                id="cardLink">
     <div class="card-container bg-white border mt-4 shadow rounded-1">
 
       <div>
@@ -268,12 +301,14 @@
           </span>
       </div>
 
-      <div class="d-flex justify-content-end socials">
-          <span class="py-2" >
+      <div  class="d-flex justify-content-end socials"
+            id="socialContainer">
+          <span class="py-2"
+                @click.prevent="likeButton(post)" >
             <a
               href=""
               :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }"
-              @click="likeButton(post)">
+              >
               <font-awesome-icon icon="fa-solid fa-thumbs-up"/>
             </a>
             
