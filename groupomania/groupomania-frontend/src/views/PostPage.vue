@@ -1,8 +1,12 @@
 <script>
 import axios from 'axios';
+import CommentsCard from '../components/CommentsCard.vue'
 
 export default {
   name: 'PostPage',
+  components: {
+    CommentsCard
+  },
   data() {
     return {
       postData: {
@@ -17,7 +21,8 @@ export default {
         userID: ''
       },
       commentsData: {
-        commentText: ''      
+        commentText: '',
+        comments: []     
       },
       isOwner: false,
       isLiked: false,
@@ -119,7 +124,18 @@ export default {
       )
     },
     getComments() {
-
+      axios.post('http://localhost:3000/api/comments/getcomments', {
+        postID: this.postData.postID
+      }).then(
+        (response) => {
+          this.commentsData.comments = response.data[0]
+          this.countsOfComments = response.data[1][0]['quantity']
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
     },
     createComment() {
       axios.post('http://localhost:3000/api/comments/createcomment', {
@@ -130,8 +146,10 @@ export default {
         }
       }).then(
         (response) => {
+          console.log(response.data)
           this.commentsData.commentText = ''
-          this.countsOfComments = response.data[0]['quantity']
+          this.countsOfComments = response.data[1][0]['quantity']
+          this.commentsData.comments = response.data[0]
         }
       ).catch(
         (error) => {
@@ -176,9 +194,10 @@ export default {
     }
   }, 
   mounted() {
-    this.getPost()
-    this.getLikes()
+    this.getPost();
+    this.getLikes();
     this.userOwnerCheck();
+    this.getComments();
     
   }
 }
@@ -252,7 +271,7 @@ export default {
                 <a
                   href=""
                   :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }"
-                  @click="likeButton">
+                  @click.prevent="likeButton">
                   <font-awesome-icon icon="fa-solid fa-thumbs-up"/>
                 </a>
                 
@@ -262,9 +281,9 @@ export default {
               </div>
 
               <span class="py-2">
-                <a href="" class="text-reset">
+                <span href="" class="text-reset">
                   <font-awesome-icon icon="fa-solid fa-comment"/>
-                </a>
+                </span>
               </span>
               <div class="py-2 px-3 d-flex flex-row ">
                 <span class="me-2"> {{ countsOfComments}} </span>
@@ -283,7 +302,7 @@ export default {
                 class="form-control" 
                 placeholder="Leave a comment here" 
                 id="floatingTextarea"></textarea>
-              <label for="floatingTextarea">Comments</label>
+              <label for="floatingTextarea">Leave a comment here</label>
             </div>
             <div class="d-flex justify-content-end ">
               <button class=" btn btn-secondary btn-sm m-2 mb-3"
@@ -294,6 +313,10 @@ export default {
           </div>
 
         </div>
+
+        <CommentsCard v-for="comment in commentsData.comments"
+                      :comment="comment"
+                      :key="comment.commentID"/>
         
         
 
