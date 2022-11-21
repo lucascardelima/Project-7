@@ -9,14 +9,15 @@ exports.getComments = async (req, res, next) => {
     request.input('postID', sql.NVarChar, req.body.postID)
     .execute('getComments').then(
         (comments) => {
-            res.status(200).json({
-                comments: comments
-            })
+            res.status(200).send(comments.recordsets)
         }
     ).catch(
-        res.status(500).json({
-            error: error
-        })
+        (error) => {
+            res.status(500).json({
+              error: error
+            })
+        }
+        
     )
 }
 
@@ -34,7 +35,7 @@ exports.createComment = async (req, res, next) => {
     .input('commentEditDate', sql.DateTime, currentDate)
     .execute('createComment').then(
         (response) => {
-            res.status(200).send(response.recordsets[0])
+            res.status(200).send(response.recordsets)
         }
     ).catch (
         (error) => {
