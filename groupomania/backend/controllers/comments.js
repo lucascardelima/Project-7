@@ -77,14 +77,13 @@ exports.deleteComment = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
     
-    request.input('postID', sql.NVarChar, req.body.postID)
-    .input('userID', sql.NVarChar, req.body.userID)
+    request.input('userID', sql.NVarChar, req.body.userID)
     .input('commentID', sql.NVarChar, req.body.commentID)
+    .input('postID', sql.NVarChar, req.body.postID)
     .execute('deleteComment').then(
-        () => {
-            res.status(200).json({
-                success: 'Comment deleted successfully'
-            })
+        (response) => {
+          console.log(response)
+          res.status(200).send(response)
         }
     ).catch (
         (error) => {
