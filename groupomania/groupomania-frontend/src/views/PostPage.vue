@@ -1,3 +1,10 @@
+<style> 
+  .font-size-custom {
+    font-size: 13px;
+  }
+
+</style>
+
 <script>
 import axios from 'axios';
 import CommentsCard from '../components/CommentsCard.vue'
@@ -37,21 +44,19 @@ export default {
           this.postData.postTitle = response.data[0].postTitle;
           this.postData.postText = response.data[0].postText;
           this.postData.postCategory = response.data[0].postCategory;
-          this.postData.userID = response.data[0].userID,
-          this.postData.firstName = response.data[0].firstName,
-          this.postData.lastName = response.data[0].lastName,
+          this.postData.userID = response.data[0].userID;
+          this.postData.firstName = response.data[0].firstName;
+          this.postData.lastName = response.data[0].lastName;
           this.postData.postCreationDate = response.data[0].postCreationDate
+          if (response.data[0].userID == localStorage.getItem('userID')) {
+            this.isOwner = true;
+          }
         }
       ).catch(
         (error) => {
           console.log(error);
         }
       )
-    },
-    userOwnerCheck() {
-      if (this.postData.userID == localStorage.getItem('userID')) {
-        this.isOwner = true;
-      }
     },
     userLikedCheck() {
       let i = 0;
@@ -128,7 +133,18 @@ export default {
         postID: this.postData.postID
       }).then(
         (response) => {
-          this.commentsData.comments = response.data[0]
+ 
+          let comments = response.data[0].map(
+            obj => {
+              return {...obj, commentCreationDate: new Date(obj.commentCreationDate)}
+            }
+          )
+
+          let sortedComments = comments.sort(
+            (a,b) => a.commentCreationDate - b.commentCreationDate
+          )
+
+          this.commentsData.comments = sortedComments
           this.countsOfComments = response.data[1][0]['quantity']
         }
       ).catch(
@@ -146,10 +162,39 @@ export default {
         }
       }).then(
         (response) => {
-          console.log(response.data)
+
+          let comments = response.data[0].map(
+            obj => {
+              return {...obj, commentCreationDate: new Date(obj.commentCreationDate)}
+            }
+          )
+
+          let sortedComments = comments.sort(
+            (a,b) => b.commentCreationDate - a.commentCreationDate
+          )
+
           this.commentsData.commentText = ''
           this.countsOfComments = response.data[1][0]['quantity']
-          this.commentsData.comments = response.data[0]
+          this.commentsData.comments = sortedComments
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
+    },
+    deleteComment(commentData) { 
+      axios.delete('http://localhost:3000/api/comments/deletecomment', {
+        data: {
+          userID: localStorage.getItem('userID'),
+          commentID: commentData.commentID,
+          postID: this.postData.postID
+
+        }
+      }).then(
+        (response) => {
+          this.commentsData.comments = response.data.recordsets[0]
+          this.countsOfComments = response.data.recordsets[1][0]['quantity']
         }
       ).catch(
         (error) => {
@@ -172,21 +217,25 @@ export default {
 
         if (postDuration < 3600000) {
           difference = Math.round((postDuration / 60000))
-          label = String(difference) + ' Min'
+          if (difference == 0) {
+            label = 'Now'
+          } else {
+            label = String(difference) + ' Min ago'
+          }
           
         } else if (postDuration >= 3600000 && postDuration < 86400000) {
           difference = Math.round((postDuration / 3600000))
           if (difference == 1) {
-            label = String(difference) + ' Hour'
+            label = String(difference) + ' Hour ago'
           } else {
-            label = String(difference) + ' Hours'
+            label = String(difference) + ' Hours ago'
           }
         } else {
           difference = Math.round((postDuration / 86400000))
           if (difference == 1) {
-            label = String(difference) + ' Day'
+            label = String(difference) + ' Day ago'
           } else {
-            label = String(difference) + ' Days'
+            label = String(difference) + ' Days ago'
           }
         }
         return label    
@@ -196,8 +245,8 @@ export default {
   mounted() {
     this.getPost();
     this.getLikes();
-    this.userOwnerCheck();
     this.getComments();
+    
     
   }
 }
@@ -222,14 +271,14 @@ export default {
                   <div class="d-flex flex-row flex-wrap ml-2">
                     <span class="fw-bold px-2 text-capitalize">{{ '/' + postData.postCategory }}</span>
                     <span class="fw-bold">.</span>
-                    <span class="font-size-custom text-secondary px-2"> 
-                      {{ 'Posted by ' + postData.firstName + ' ' + postData.lastName + ' ' + postTenure + ' ago'  }}
+                    <span class="font-size-custom align-self-end text-secondary px-2"> 
+                      {{ 'Posted by ' + postData.firstName + ' ' + postData.lastName + ' ' + postTenure}}
                     </span>
                   </div>
                 </div>
 
                 <div v-if="this.isOwner" >
-                  <a class="px-3" 
+                  <a class="px-3 text-decoration-none text-reset" 
                     type="button"
                     id="dropdownMenuButton1"
                     data-bs-toggle="dropdown"
@@ -316,7 +365,8 @@ export default {
 
         <CommentsCard v-for="comment in commentsData.comments"
                       :comment="comment"
-                      :key="comment.commentID"/>
+                      :key="comment.commentID"
+                      @delete-comment="deleteComment"/>
         
         
 
