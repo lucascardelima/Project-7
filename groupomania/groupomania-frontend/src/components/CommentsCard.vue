@@ -99,26 +99,9 @@
       <div v-if="this.isOwner" >
         <a class="px-2 text-decoration-none text-reset" 
           type="button"
-          id="dropdownMenuButton1"
-          data-bs-toggle="dropdown"
-          aria-expanded="false">
-          <font-awesome-icon icon="fa-solid fa-ellipsis-vertical"/>
+          @click.prevent="this.$emit('delete-comment', this.commentData)">
+          <font-awesome-icon icon="fa-solid fa-trash-can" />
         </a>
-        <ul
-          class="dropdown-menu"
-          aria-labelledby="dropdownMenuButton1">
-          <li
-            class="dropdown-item"
-            >Edit
-          </li>
-          <li>
-            <a
-            class="dropdown-item"
-            href="#"
-            @click.prevent="this.$emit('delete-comment', this.commentData)">
-            Delete</a>
-          </li>
-        </ul>
       </div>
       
     </div>
