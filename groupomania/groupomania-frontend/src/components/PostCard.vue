@@ -94,7 +94,7 @@
 
         axios.delete('http://localhost:3000/api/posts/deletepost', { 
           data: {
-            userID: post.localStorage.getItem('userID'),
+            userID: localStorage.getItem('userID'),
             postID: post.postID
           }
         }).then(
@@ -249,22 +249,20 @@
 
           <div class="d-flex flex-row align-items-center feed-text px-2">
             
-            
             <div class="d-flex flex-row flex-wrap ml-2">
               <span class="fw-bold px-2 text-capitalize">{{ '/' + post.postCategory }}</span>
               <span class="fw-bold">.</span>
               <span class="font-size-custom text-secondary px-2"> 
                 {{ 'Posted by ' + post.firstName + ' ' + post.lastName + ' ' + postTenure + ' ago'  }}
               </span>
-            </div>
-          </div>
 
-          <div>
+            </div>
             
           </div>
 
+
           <div v-if="this.isOwner" >
-            <a class="px-3" 
+            <a class="px-3 text-decoration-none text-reset" 
               type="button"
               id="dropdownMenuButton1"
               data-bs-toggle="dropdown"
@@ -284,7 +282,7 @@
                 <a
                 class="dropdown-item"
                 href="#"
-                @click="deletePost(post)">
+                @click.prevent="deletePost(post)">
                 Delete</a>
               </li>
             </ul>
