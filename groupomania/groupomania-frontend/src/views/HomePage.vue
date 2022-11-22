@@ -28,7 +28,18 @@
       getPosts() {
         axios.post('http://localhost:3000/api/posts/getposts', this.requestDetails).then(
         (response) => {
-          this.addPosts(response.data);
+
+          let posts = response.data.map(
+            obj => {
+              return {...obj, postCreationDate: new Date(obj.postCreationDate)}
+            }
+          )
+       
+          let sortedPosts = posts.sort(
+            (a,b) => b.postCreationDate - a.postCreationDate
+          )
+          this.posts = sortedPosts
+          
         }
       ).catch(
         (error) => {
@@ -39,12 +50,13 @@
         this.posts.push(posts)
       },
       deletePost(deletedPostID) {
+  
         let i = 0;
 
-        for (i = 0; i < this.posts[0].length; i++) {
+        for (i = 0; i < this.posts.length; i++) {
 
-          if (this.posts[0][i].postID == deletedPostID) {
-            this.posts[0].splice(i, 1);
+          if (this.posts[i].postID == deletedPostID) {
+            this.posts.splice(i, 1);
           }
         }
       }      
@@ -62,7 +74,7 @@
       <div class="col-md-8">
         <div class="feed p-2">
                     
-          <PostCard v-for="post in posts[0]"
+          <PostCard v-for="post in posts"
                     :post="post"
                     :key="post.postID"
                     @delete-post="deletePost"/>
