@@ -143,9 +143,14 @@ export default {
           let sortedComments = comments.sort(
             (a,b) => a.commentCreationDate - b.commentCreationDate
           )
-
-          this.commentsData.comments = sortedComments
-          this.countsOfComments = response.data[1][0]['quantity']
+          
+          if (response.data[0].length) {
+            this.commentsData.comments = sortedComments
+            this.countsOfComments = response.data[1][0]['quantity']
+          } else {
+            this.commentsData.comments = []
+            this.countsOfComments = 0 
+          }
         }
       ).catch(
         (error) => {
@@ -193,8 +198,13 @@ export default {
         }
       }).then(
         (response) => {
-          this.commentsData.comments = response.data.recordsets[0]
-          this.countsOfComments = response.data.recordsets[1][0]['quantity']
+          if (response.data.recordsets[0].length) {
+            this.commentsData.comments = response.data.recordsets[0]
+            this.countsOfComments = response.data.recordsets[1][0]['quantity']
+          } else {
+            this.commentsData.comments = []
+            this.countsOfComments = 0
+          }
         }
       ).catch(
         (error) => {
