@@ -87,7 +87,7 @@
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
         <div
-          class="card bg-secondary text-white"
+          class="card bg-secondary text-white shadow-lg border-3 rounded-1"
           style="border-radius: 0rem">
           <div class="card-body p-5 text-center">
             <form  @submit.prevent="userSignup">
