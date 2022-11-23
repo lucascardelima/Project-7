@@ -16,14 +16,6 @@
     align-items: flex-end;
   }
 
-  .card-link:hover .card-container {
-    border-color: blue;
-  }
-
-  .card-container {
-    border-color: blue;
-  }
-
   a {
     color: none;
   }
@@ -72,7 +64,9 @@
         isOwner: false,
         isLiked: false,
         countsOfLikes: 0,
-        countsOfComments: 0
+        countsOfComments: 0,
+        hover: false,
+        borderPrimary: 'border-primary'
       }
     },
     methods: {
@@ -241,8 +235,13 @@
   
   <router-link  :to="`/postpage/${post.postID}`" 
                 class="card-link text-decoration-none text-reset"
-                id="cardLink">
-    <div class="card-container bg-white border mt-4 shadow rounded-1">
+                id="cardLink"
+                >
+
+    <div  class="bg-white border mt-4 shadow rounded-1"
+                @mouseover="hover = true"
+                @mouseleave="hover = false"
+                :class="{ 'border-secondary' : hover}">
 
       <div>
         <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
