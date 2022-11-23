@@ -266,7 +266,7 @@ export default {
 <template>
 
   <div class="container mt-4 mb-5">
-    <div class="d-flex justify-content-center row">
+    <div class="d-flex justify-content-center">
       <div class="col-md-8">
 
         <div class="card-link text-decoration-none text-reset">
@@ -373,13 +373,13 @@ export default {
 
         </div>
 
+        <hr>
+        
         <CommentsCard v-for="comment in commentsData.comments"
                       :comment="comment"
                       :key="comment.commentID"
                       @delete-comment="deleteComment"/>
         
-        
-
       </div>
     </div>
   </div>
