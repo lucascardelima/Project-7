@@ -126,10 +126,14 @@ export default {
                         {{ userSalutation }}
                     </li>
 
-                    <li class="vl"></li>
+                    <li class="vl"
+                        v-if="this.authStore.isLoggedIn"></li>
 
                     <li class="list-item"
-                        v-if="this.authStore.isLoggedIn">
+                        v-if="this.authStore.isLoggedIn"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        title="Homepage">
                         <router-link 
                             class="navbar-link" 
                             to="/">
@@ -148,12 +152,26 @@ export default {
                             <font-awesome-icon icon="fa-solid fa-plus" />
                         </router-link>
                     </li>
+                    <li class="list-item"
+                        v-if="this.authStore.isLoggedIn"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        title="Account">
+                        <router-link 
+                            class="navbar-link"
+                            to="/">
+                            <font-awesome-icon icon="fa-solid fa-user" />
+                        </router-link>
+                    </li>
 
-                    <li>
+                    <li class="list-item"
+                        v-if="this.authStore.isLoggedIn"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        title="Logout">
                         <router-link 
                             class="navbar-link"
                             to="/"
-                            v-if="this.authStore.isLoggedIn"
                             @click="logOut">
                             <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
                         </router-link>
