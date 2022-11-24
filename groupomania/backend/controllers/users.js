@@ -3,6 +3,7 @@ const dbconfig = require('../config/dbconfig').config;
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
 
 
 exports.login = async (req, res, next) => {
@@ -32,7 +33,7 @@ exports.login = async (req, res, next) => {
                         } else {
                             const token = jwt.sign(
                                 { userID: user.userID },
-                                'MY_SECRECT_KEY',
+                                process.env.SECRET_KEY,
                                 { expiresIn: '24h' }
                             );
                             res.status(200).json({
