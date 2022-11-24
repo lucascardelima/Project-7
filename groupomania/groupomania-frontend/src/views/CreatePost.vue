@@ -10,6 +10,10 @@
 
 <script>
   import axios from 'axios'
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+  axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+
   export default {
     name: 'CreatePost',
     data() {
@@ -17,19 +21,25 @@
         postDetails: {
           postTitle:'',
           postText: '',
-          postCategory: '',
-          userID: '',
-          token: ''
+          postCategory: ''
         }
       }
     },
     methods: {
       createPost() {
         this.postDetails.userID = localStorage.getItem('userID');
-        this.postDetails.token = localStorage.getItem('token');
-        axios.post('http://localhost:3000/api/posts/createpost', this.postDetails)
-          .then(response => console.log(response.data))
-          .catch(error => console.log(error))
+        axios.post('http://localhost:3000/api/posts/createpost', {
+          data: {
+            postTitle: this.postDetails.postTitle,
+            postText: this.postDetails.postText,
+            postCategory: this.postDetails.postCategory,
+            userID: localStorage.getItem('userID')
+          }
+        }).then(
+          response => console.log(response.data)
+          ).catch(
+            error => console.log(error)
+          )
 
         this.postDetails.postTitle = '';
         this.postDetails.postText = '';

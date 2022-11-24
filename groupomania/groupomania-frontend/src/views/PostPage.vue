@@ -9,6 +9,9 @@
 import axios from 'axios';
 import CommentsCard from '../components/CommentsCard.vue'
 
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+
 export default {
   name: 'PostPage',
   components: {
@@ -39,7 +42,12 @@ export default {
   }, 
   methods: {
     getPost() {
-      axios.post('http://localhost:3000/api/posts/getpost', this.postData).then(
+      axios.post('http://localhost:3000/api/posts/getpost', {
+        data: {
+          postID: this.postData.postID,
+          userID: localStorage.getItem('userID')
+        }
+      }).then(
         (response) => {
           this.postData.postTitle = response.data[0].postTitle;
           this.postData.postText = response.data[0].postText;
@@ -113,6 +121,7 @@ export default {
     getLikes() {
       axios.post('http://localhost:3000/api/like/getlikes', {
         data: {
+          userID: localStorage.getItem('userID'),
           postID: this.postData.postID
         }
       }).then(
@@ -130,7 +139,10 @@ export default {
     },
     getComments() {
       axios.post('http://localhost:3000/api/comments/getcomments', {
-        postID: this.postData.postID
+        data: {
+          userID: localStorage.getItem('userID'),
+          postID: this.postData.postID
+        }
       }).then(
         (response) => {
  

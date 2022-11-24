@@ -150,6 +150,7 @@
       getLikes() {
         axios.post('http://localhost:3000/api/like/getlikes', {
           data: {
+            userID: localStorage.getItem('userID'),
             postID: this.post.postID
           }
         }).then(
@@ -172,7 +173,10 @@
       },
       getComments() {
         axios.post('http://localhost:3000/api/comments/getcomments', {
-          postID: this.postData.postID
+          data: {
+            userID: localStorage.getItem('userID'),
+            postID: this.postData.postID
+          }
         }).then(
           (response) => {
             if (response.data[1][0]) {

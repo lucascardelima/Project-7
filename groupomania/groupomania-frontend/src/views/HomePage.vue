@@ -18,15 +18,19 @@
       return {
         requestDetails: {
           postCategory: localStorage.getItem('preference'),
-          userID: localStorage.getItem('userID'),
-          token: localStorage.getItem('token')
+          userID: localStorage.getItem('userID')
         },
         posts: []
       }
     },
     methods: {
       getPosts() {
-        axios.post('http://localhost:3000/api/posts/getposts', this.requestDetails).then(
+        axios.post('http://localhost:3000/api/posts/getposts', {
+          data: {
+            userID: localStorage.getItem('userID'),
+            postCategory: localStorage.getItem('preference')
+          }
+        }).then(
         (response) => {
 
           let posts = response.data.map(
