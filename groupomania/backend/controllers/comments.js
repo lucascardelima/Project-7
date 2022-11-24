@@ -6,7 +6,7 @@ exports.getComments = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
 
-    request.input('postID', sql.NVarChar, req.body.postID)
+    request.input('postID', sql.NVarChar, req.body.data.postID)
     .execute('getComments').then(
         (comments) => {
             res.status(200).send(comments.recordsets)

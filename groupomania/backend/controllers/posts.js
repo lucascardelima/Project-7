@@ -10,12 +10,12 @@ exports.createPost = async (req, res, next) => {
     const currentDate = new Date();
     
     request.input('postID', sql.NVarChar, postID)
-    .input('userID', sql.NVarChar, req.body.userID)
-    .input('postTitle', sql.NVarChar, req.body.postTitle)
+    .input('userID', sql.NVarChar, req.body.data.userID)
+    .input('postTitle', sql.NVarChar, req.body.data.postTitle)
     .input('postCreationDate', sql.DateTime, currentDate)
     .input('postEditDate', sql.DateTime, currentDate)
-    .input('postText', sql.NVarChar, req.body.postText)
-    .input('postCategory', sql.NVarChar, req.body.postCategory)
+    .input('postText', sql.NVarChar, req.body.data.postText)
+    .input('postCategory', sql.NVarChar, req.body.data.postCategory)
     .input('imageUrl', sql.NVarChar, 'test')
     .execute('createPost').then(
         () => {
@@ -86,8 +86,11 @@ exports.getPosts = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
 
-    request.input('postCategory', sql.NVarChar, req.body.postCategory)
-    .input('userID', sql.NVarChar, req.body.userID)
+    console.log(req.body)
+    
+
+    request.input('postCategory', sql.NVarChar, req.body.data.postCategory)
+    .input('userID', sql.NVarChar, req.body.data.userID)
     .execute('getPosts').then(
         (posts) => {
             res.status(200).send(posts.recordsets[0])
@@ -106,7 +109,7 @@ exports.getPost = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
 
-    request.input('postID', sql.NVarChar, req.body.postID)
+    request.input('postID', sql.NVarChar, req.body.data.postID)
     .execute('getPost').then(
         (posts) => {
             res.status(200).send(posts.recordsets[0])
