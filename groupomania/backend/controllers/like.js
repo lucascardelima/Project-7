@@ -85,8 +85,8 @@ exports.dislike = async (req, res, next) => {
     let pool = await sql.connect(dbconfig)
     let request = new sql.Request(pool);
     
-    request.input('userID', sql.NVarChar, req.body.userID)
-    .input('postID', sql.NVarChar, req.body.postID)
+    request.input('userID', sql.NVarChar, req.body.data.userID)
+    .input('postID', sql.NVarChar, req.body.data.postID)
     .execute('postDislike').then(
         (result) => {
             res.status(200).send(result.recordset[0])
