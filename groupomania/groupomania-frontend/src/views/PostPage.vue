@@ -82,7 +82,7 @@ export default {
     },
     likeButton() {
       if (this.isLiked) {
-        axios.delete('http://localhost:3000/api/like/dislike', {
+        axios.post('http://localhost:3000/api/like/dislike', {
           data: {
             userID: localStorage.getItem('userID'),
             postID: this.postData.postID
