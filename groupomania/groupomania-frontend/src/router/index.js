@@ -5,6 +5,7 @@ import HomePage from "../views/HomePage.vue"
 import CreatePost from "../views/CreatePost.vue"
 import EditPost from "../views/EditPost.vue"
 import PostPage from "../views/PostPage.vue"
+import UserPage from "../views/UserPage.vue"
 
 
 const routes = [
@@ -39,6 +40,11 @@ const routes = [
     name: "postpage",
     component: PostPage,
     props: true
+  },
+  {
+    path: "/userpage/",
+    name: "userpage",
+    component: UserPage
   }
 ];
 
