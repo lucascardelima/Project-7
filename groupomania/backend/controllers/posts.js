@@ -64,8 +64,8 @@ exports.deletePost = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
         
-    request.input('postID', sql.NVarChar, req.body.postID)
-    .input('userID', sql.NVarChar, req.body.userID)
+    request.input('postID', sql.NVarChar, req.body.data.postID)
+    .input('userID', sql.NVarChar, req.body.data.userID)
     .execute('deletePost').then(
         () => {
             res.status(200).json({
