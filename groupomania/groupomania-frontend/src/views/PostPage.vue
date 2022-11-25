@@ -228,6 +228,23 @@ export default {
           console.log(error)
         }
       )
+    },
+    deletePost() {
+      axios.post('http://localhost:3000/api/posts/deletepost', {
+        data: {
+          userID: localStorage.getItem('userID'),
+          postID: this.postData.postID
+        }
+      }).then(
+        (response) => {
+          console.log(response)
+
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
     }
   },
   computed: {
@@ -322,11 +339,13 @@ export default {
                       >Edit</router-link>
                     </li>
                     <li>
-                      <a
-                      class="dropdown-item"
-                      href="#"
-                      >
-                      Delete</a>
+                      <router-link
+                        to="/"
+                        class="dropdown-item"
+                        href="#"
+                        @click="deletePost">
+                        Delete
+                      </router-link>
                     </li>
                   </ul>
                 </div>
