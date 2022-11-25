@@ -82,7 +82,6 @@ exports.deleteComment = async (req, res, next) => {
     .input('postID', sql.NVarChar, req.body.postID)
     .execute('deleteComment').then(
         (response) => {
-          console.log(response)
           res.status(200).send(response)
         }
     ).catch (

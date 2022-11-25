@@ -84,10 +84,7 @@ exports.deletePost = async (req, res, next) => {
 
 exports.getPosts = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
-    let request = new sql.Request(pool);
-
-    console.log(req.body)
-    
+    let request = new sql.Request(pool);    
 
     request.input('postCategory', sql.NVarChar, req.body.data.postCategory)
     .input('userID', sql.NVarChar, req.body.data.userID)
