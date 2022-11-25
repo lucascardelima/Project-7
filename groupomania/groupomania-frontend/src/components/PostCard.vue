@@ -38,6 +38,9 @@
 <script>
   import { usePostStore } from '../stores/PostStore'; 
   import axios from 'axios';
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+  axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
   
   export default {
     setup() {
@@ -86,7 +89,7 @@
       },
       deletePost(post) {
 
-        axios.delete('http://localhost:3000/api/posts/deletepost', { 
+        axios.post('http://localhost:3000/api/posts/deletepost', {
           data: {
             userID: localStorage.getItem('userID'),
             postID: post.postID
@@ -105,7 +108,7 @@
       likeButton(post) {
         if (this.isLiked) {
           
-          axios.delete('http://localhost:3000/api/like/dislike', {
+          axios.post('http://localhost:3000/api/like/dislike', {
             data: {
               userID: localStorage.getItem('userID'),
               postID: post.postID
