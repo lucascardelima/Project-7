@@ -62,7 +62,12 @@
               <h4 class="fw-bold mb-2 text-center">Create Your Post</h4>
           
               <div class="mb-3">
-                <label for="postTitle" class="form-label fw-bold">Title</label>
+                <label 
+                  for="postTitle" 
+                  class="form-label fw-bold">
+                  Title
+                </label>
+
                 <input 
                   type="text" 
                   class="form-control" 
@@ -72,7 +77,12 @@
               </div>
 
               <div class="mb-3">
-                <label for="postText" class="form-label fw-bold">Text</label>
+                <label 
+                  for="postText" 
+                  class="form-label fw-bold">
+                  Text
+                </label>
+                
                 <textarea 
                   class="form-control" 
                   id="postText" 
