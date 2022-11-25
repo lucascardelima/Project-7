@@ -8,6 +8,7 @@
 <script>
 import axios from 'axios';
 import CommentsCard from '../components/CommentsCard.vue'
+import { useAuthStore } from '../stores/AuthStore'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
 axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
@@ -16,6 +17,10 @@ export default {
   name: 'PostPage',
   components: {
     CommentsCard
+  },
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore}
   },
   data() {
     return {
@@ -385,7 +390,7 @@ export default {
 
         </div>
 
-        <hr>
+        <hr v-if="this.commentsData.comments.length">
         
         <CommentsCard v-for="comment in commentsData.comments"
                       :comment="comment"
