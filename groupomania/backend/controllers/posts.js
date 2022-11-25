@@ -38,11 +38,11 @@ exports.updatePost = async (req, res, next) => {
     let request = new sql.Request(pool);
     let currentDate = new Date();
 
-    request.input('postText', sql.NVarChar, req.body.postText)
-    .input('postID', sql.NVarChar, req.body.postID)
-    .input('postTitle', sql.NVarChar, req.body.postTitle)
-    .input('postCategory', sql.NVarChar, req.body.postCategory)
-    .input('userID', sql.NVarChar, req.body.userID)
+    request.input('postText', sql.NVarChar, req.body.data.postText)
+    .input('postID', sql.NVarChar, req.body.data.postID)
+    .input('postTitle', sql.NVarChar, req.body.data.postTitle)
+    .input('postCategory', sql.NVarChar, req.body.data.postCategory)
+    .input('userID', sql.NVarChar, req.body.data.userID)
     .input('postEditDate', sql.DateTime, currentDate)
     .execute('updatePost').then(
         () => {
