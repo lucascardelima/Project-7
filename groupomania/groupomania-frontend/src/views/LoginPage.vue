@@ -52,6 +52,10 @@
           window.localStorage.setItem('isLoggedIn', true);
           this.authStore.firstName = response.data.firstName;
           this.authStore.isLoggedIn = true;
+          this.authStore.userID = response.data.userID;
+          this.authStore.lastName = response.data.lastName;
+          axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+          axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
           this.$router.push('/')
 
           }
