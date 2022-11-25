@@ -16,7 +16,12 @@ export default {
   },
   methods: {
     updatePost() {
-      axios.put('http://localhost:3000/api/posts/updatepost', this.postData).then(
+      axios.put('http://localhost:3000/api/posts/updatepost', {
+        data: {
+          postID: this.postData.postID,
+          userID: localStorage.getItem('userID')
+        }
+      }).then(
         (response) => {
           console.log(response)
           this.$router.push('/')
@@ -29,7 +34,12 @@ export default {
     }
   },
   mounted() {
-    axios.post('http://localhost:3000/api/posts/getpost', this.postData).then(
+    axios.post('http://localhost:3000/api/posts/getpost', {
+      data: {
+        postID: this.postData.postID,
+        userID: localStorage.getItem('userID')
+      }
+    }).then(
       (response) => {
         this.postData.postTitle = response.data[0].postTitle;
         this.postData.postText = response.data[0].postText;
