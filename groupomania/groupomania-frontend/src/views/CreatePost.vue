@@ -82,7 +82,7 @@
                   class="form-label fw-bold">
                   Text
                 </label>
-                
+
                 <textarea 
                   class="form-control" 
                   id="postText" 
@@ -114,6 +114,16 @@
                   <option value="cooking">Cooking</option>
                   <option value="traveling">Traveling</option>
                 </select>
+              </div>
+
+              <div class="mb-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref="file"
+                  
+                />
+
               </div>
               
               <button
