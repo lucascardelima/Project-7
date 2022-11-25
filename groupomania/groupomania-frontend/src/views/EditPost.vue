@@ -1,3 +1,14 @@
+<style scoped>
+  .main-card {
+    max-width : 80%;
+  }
+  #submitButton:hover {
+    background-color: green;
+    color: white;
+  }
+
+</style>
+
 <script>
 import axios from 'axios';
 
@@ -19,7 +30,10 @@ export default {
       axios.put('http://localhost:3000/api/posts/updatepost', {
         data: {
           postID: this.postData.postID,
-          userID: localStorage.getItem('userID')
+          userID: localStorage.getItem('userID'),
+          postTitle: this.postData.postTitle,
+          postText: this.postData.postText,
+          postCategory: this.postData.postCategory
         }
       }).then(
         (response) => {
@@ -63,13 +77,17 @@ export default {
 <div class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="main-card">
-        <div class="card bg-secondary text-white" style="border-radius: 0rem">
+        <div class="card bg-white text-black rounded-1 shadow border-4">
           <div class="card-body p-4">
-            <form @submit.prevent="updatePost()">
-              <div class="m-3">
+            <form @submit.prevent="updatePost">
+
+              <h4 class="fw-bold mb-2 text-center">Update Your Post</h4>
+
+              <div class="mb-3">
+
                 <label 
                   for="postTitle"
-                  class="col-form-label">
+                  class="form-label fw-bold">
                   Title:
                 </label>
                 <input
@@ -78,13 +96,16 @@ export default {
                   id="postTitle"
                   v-model="postData.postTitle"
                   required>
-                <hr>
+              </div>
+
+              <div class="mb-3">
 
                 <label 
                   for="postText"
-                  class="col-form-label">
+                  class="form-label fw-bold">
                   Text:
                 </label>
+
                 <textarea
                   type="text"
                   class="form-control"
@@ -94,9 +115,13 @@ export default {
                   required>
                 </textarea>
 
+              </div>
+
+              <div class="mb-3">
+
                 <label
                   for="postCategory"
-                  class="col-form-label">
+                  class="form-label fw-bold">
                   Category
                 </label>
                 <select 
@@ -113,10 +138,12 @@ export default {
                   <option value="cooking">Cooking</option>
                   <option value="traveling">Traveling</option>
                 </select>
+
               </div>
+
               <button
                 id="submitButton" 
-                class="btn btn-outline-light btn-lg px-5" 
+                class="btn btn-outline-light btn-secondary btn-lg px-5" 
                 type="submit">
                   Update
               </button>
