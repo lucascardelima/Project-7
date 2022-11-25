@@ -72,12 +72,18 @@ export default {
                 window.localStorage.removeItem('firstName');
                 window.localStorage.removeItem('lastName');
                 window.localStorage.removeItem('isLoggedIn');
+                delete this.axios.defaults.headers.common['Authorization']
+                delete this.axios.defaults.headers.post['Authorization']
                 this.authStore.$reset();
                 this.$router.push('/loginpage');
+                
             } else {
                 window.localStorage.clear();
+                delete this.axios.defaults.headers.common['Authorization']
+                delete this.axios.defaults.headers.post['Authorization']
                 this.authStore.$reset();
                 this.$router.push('/loginpage');
+
             }
         }
     },
