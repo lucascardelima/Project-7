@@ -206,7 +206,7 @@ export default {
       )
     },
     deleteComment(commentData) { 
-      axios.delete('http://localhost:3000/api/comments/deletecomment', {
+      axios.post('http://localhost:3000/api/comments/deletecomment', {
         data: {
           userID: localStorage.getItem('userID'),
           commentID: commentData.commentID,
