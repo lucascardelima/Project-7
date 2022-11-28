@@ -62,6 +62,8 @@
           title: this.post.postTitle,
           text: this.post.postText,
           category: this.post.postCategory,
+          imageUrl: this.post.imageUrl,
+          profileImage: this.post.profileImage,
           likes: []
         },
         isOwner: false,
@@ -254,7 +256,11 @@
         <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
 
           <div class="d-flex flex-row align-items-center feed-text px-2">
-            
+            <img 
+              v-if="postData.profileImage" 
+              class="rounded-circle" 
+              :src="require(`../../../backend/images/${postData.profileImage}`)" 
+              width="35"> 
             <div class="d-flex flex-row flex-wrap ml-2">
               <span class="fw-bold px-2 text-capitalize">{{ '/' + post.postCategory }}</span>
               <span class="fw-bold">.</span>
@@ -294,6 +300,10 @@
             </ul>
           </div>
         </div>
+      </div>
+
+      <div>
+        <img v-if="postData.imageUrl" class="w-100" :src="require(`../../../backend/images/${postData.imageUrl}`)">
       </div>
 
       <div class="p-2 px-3 d-flex flex-column">
