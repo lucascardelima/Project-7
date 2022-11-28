@@ -33,7 +33,10 @@ export default {
         firstName: '',
         lastName: '', 
         postCreationDate: '',
-        userID: ''
+        userID: '',
+        imageUrl: '',
+        profileImage: ''
+
       },
       commentsData: {
         commentText: '',
@@ -61,6 +64,8 @@ export default {
           this.postData.firstName = response.data[0].firstName;
           this.postData.lastName = response.data[0].lastName;
           this.postData.postCreationDate = response.data[0].postCreationDate
+          this.postData.imageUrl = response.data[0].imageUrl
+          this.postData.profileImage = response.data[0].profileImage
           if (response.data[0].userID == localStorage.getItem('userID')) {
             this.isOwner = true;
           }
@@ -311,6 +316,7 @@ export default {
 
                 <div class="d-flex flex-row align-items-center feed-text px-2">
                   
+                  <img v-if="postData.profileImage" class="rounded-circle" :src="require(`../../../backend/images/${postData.profileImage}`)" width="35"> 
                   
                   <div class="d-flex flex-row flex-wrap ml-2">
                     <span class="fw-bold px-2 text-capitalize">{{ '/' + postData.postCategory }}</span>
@@ -350,6 +356,10 @@ export default {
                   </ul>
                 </div>
               </div>
+            </div>
+
+            <div>
+              <img v-if="postData.imageUrl" class="w-100" :src="require('../../../backend/images/' + postData.imageUrl)">
             </div>
 
             <div class="p-2 px-3 d-flex flex-column">
