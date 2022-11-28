@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('authStore', {
         firstName: window.localStorage.getItem('firstName'),
         lastName: window.localStorage.getItem('lastName'),
         userID: window.localStorage.getItem('userID'),
-        email: window.localStorage.getItem('email')
+        email: window.localStorage.getItem('email'),
+        profileImage: window.localStorage.getItem('profileImage')
     })
 })
