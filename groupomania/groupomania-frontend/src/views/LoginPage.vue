@@ -43,6 +43,7 @@
       userLogin() {
         axios.post('http://localhost:3000/api/auth/login', this.userDetails)
         .then((response) => {
+          console.log(response.data)
           window.localStorage.setItem('token', response.data.token);
           window.localStorage.setItem('userID', response.data.userID);
           window.localStorage.setItem('preference', response.data.preference);
@@ -50,12 +51,17 @@
           window.localStorage.setItem('firstName', response.data.firstName);
           window.localStorage.setItem('lastName', response.data.lastName);
           window.localStorage.setItem('isLoggedIn', true);
+          window.localStorage.setItem('profileImage', response.data.profileImage);
+
           this.authStore.firstName = response.data.firstName;
           this.authStore.isLoggedIn = true;
           this.authStore.userID = response.data.userID;
           this.authStore.lastName = response.data.lastName;
+          this.authStore.profileImage = response.data.profileImage;
+
           axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
           axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+
           this.$router.push('/')
 
           }
