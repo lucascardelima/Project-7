@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
-
+const fs = require('fs');
 
 exports.login = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
@@ -14,6 +14,7 @@ exports.login = async (req, res, next) => {
     .execute('loginUser').then(
         (result) => {
             const user = result.recordset[0];
+            
 
             if (typeof(user) === 'undefined') {
                 return res.status(401).json({
@@ -43,7 +44,8 @@ exports.login = async (req, res, next) => {
                                 firstName: user.firstName,
                                 lastName: user.lastName,
                                 preference: user.preference,
-                                email: user.email
+                                email: user.email,
+                                profileImage: user.profileImage
                             });
                         }
                     }
@@ -55,22 +57,6 @@ exports.login = async (req, res, next) => {
                     }
                 );  
             }
-        }
-    ).catch(
-        (error) => {
-            res.status(500).json({
-                error: error
-            });
-        }
-    );
-};
-
-
-exports.getUsers = async (req, res, next) => {
-    let pool = await sql.connect(dbconfig);
-    pool.request().query('SELECT a.userID, a.firstName, a.lastName, a.dateOfBirth, a.email, b.password FROM Users a LEFT JOIN UserCredentials b on a.userID = b.userID').then(
-        (users) => {
-            res.status(200).send(users.recordsets[0]);
         }
     ).catch(
         (error) => {
@@ -110,8 +96,6 @@ exports.signup = async (req, res, next) => {
         (salt) => {
             bcrypt.hash(req.body.password, salt).then(
                 (hash) => {
-                    console.log(hash);
-                    console.log(req.body.preference.toString());
                     request.input('userID', sql.NVarChar, userID)
                     .input('firstName', sql.NVarChar, req.body.firstName)
                     .input('lastName', sql.NVarChar, req.body.lastName)
@@ -121,10 +105,25 @@ exports.signup = async (req, res, next) => {
                     .input('currentDate', sql.DateTime, currentDate)
                     .input('preference', sql.NVarChar, req.body.preference.toString())
                     .execute('insertUser').then(
-                        () => {
+                        (result) => {
+                        
+                            const user = result.recordset[0];
+                            
+                            const token = jwt.sign(
+                                { userID: user.userID },
+                                process.env.SECRET_KEY,
+                                { expiresIn: '24h' }
+                            );
                             res.status(200).json({
-                                success: 'User created successfully'
-                            })
+                                message: 'User Created Successfully',
+                                userID: user.userID,
+                                token: token,
+                                firstName: user.firstName,
+                                lastName: user.lastName,
+                                preference: user.preference,
+                                email: user.email,
+                                profileImage: user.profileImage
+                            });
                         }
                     ).catch (
                         (error) => {
@@ -187,6 +186,31 @@ exports.updateUser = async (req, res, next) => {
             );
         }
     ).catch(
+        (error) => {
+            res.status(500).json({
+                error: error
+            })
+            sql.close();
+        }
+    )
+}
+
+exports.deleteUser = async (req, res, next) => {
+    let pool = await sql.connect(dbconfig);
+    let request = new sql.Request(pool);
+
+    request.input('userID', sql.NVarChar, req.body.data.userID)
+    .execute('deleteUser').then(
+        (result) => {
+            const image = 'images/' + result.recordset[0].profileImage
+
+            fs.unlink(image, () => {
+                res.status(200).json({
+                    success: 'Post deleted successfully'
+                })
+            })
+        }
+    ).catch (
         (error) => {
             res.status(500).json({
                 error: error
