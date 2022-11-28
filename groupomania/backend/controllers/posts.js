@@ -1,6 +1,7 @@
 const sql = require('mssql');
 const dbconfig = require('../config/dbconfig').config;
 const crypto = require('crypto');
+const fs = require('fs');
 
 exports.createPost = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
@@ -8,7 +9,7 @@ exports.createPost = async (req, res, next) => {
     const postID = crypto.randomUUID();
     const url = req.protocol + '://' + req.get('host');
     const currentDate = new Date();
-    
+
     request.input('postID', sql.NVarChar, postID)
     .input('userID', sql.NVarChar, req.body.data.userID)
     .input('postTitle', sql.NVarChar, req.body.data.postTitle)
@@ -16,11 +17,11 @@ exports.createPost = async (req, res, next) => {
     .input('postEditDate', sql.DateTime, currentDate)
     .input('postText', sql.NVarChar, req.body.data.postText)
     .input('postCategory', sql.NVarChar, req.body.data.postCategory)
-    .input('imageUrl', sql.NVarChar, 'test')
     .execute('createPost').then(
-        () => {
+        (result) => {
             res.status(200).json({
-                success: 'Post Created successfully'
+                message: 'Post Created successfully',
+                postID: result.recordset[0].postID
             })
         }
     ).catch (
@@ -67,9 +68,13 @@ exports.deletePost = async (req, res, next) => {
     request.input('postID', sql.NVarChar, req.body.data.postID)
     .input('userID', sql.NVarChar, req.body.data.userID)
     .execute('deletePost').then(
-        () => {
-            res.status(200).json({
-                success: 'Post deleted successfully'
+        (result) => {
+            const image = 'images/' + result.recordset[0].imageUrl
+
+            fs.unlink(image, () => {
+                res.status(200).json({
+                    success: 'Post deleted successfully'
+                })
             })
         }
     ).catch (
