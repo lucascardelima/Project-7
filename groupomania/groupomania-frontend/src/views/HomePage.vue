@@ -31,27 +31,23 @@
             postCategory: localStorage.getItem('preference')
           }
         }).then(
-        (response) => {
+          (response) => {
 
-          let posts = response.data.map(
-            obj => {
-              return {...obj, postCreationDate: new Date(obj.postCreationDate)}
-            }
-          )
-       
-          let sortedPosts = posts.sort(
-            (a,b) => b.postCreationDate - a.postCreationDate
-          )
-          this.posts = sortedPosts
-          
-        }
-      ).catch(
-        (error) => {
-          console.log(error)
-        }
-      )},
-      addPosts(posts) {
-        this.posts.push(posts)
+            let posts = response.data.map(
+              obj => {
+                return {...obj, postCreationDate: new Date(obj.postCreationDate)}
+              }
+            )
+        
+            let sortedPosts = posts.sort(
+              (a,b) => b.postCreationDate - a.postCreationDate
+            )
+            this.posts = sortedPosts
+            
+          }).catch(
+            (error) => {
+              console.log(error)
+            })
       },
       deletePost(deletedPostID) {
   
@@ -77,6 +73,7 @@
     <div class="d-flex justify-content-center row">
       <div class="col-md-8">
         <div class="feed p-2">
+       
           <PostCard v-for="post in posts"
                     :post="post"
                     :key="post.postID"
@@ -89,4 +86,7 @@
 
     
 </template>
+
+
+
 
