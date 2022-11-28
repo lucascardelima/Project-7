@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
@@ -6,6 +7,7 @@ const usersRoutes = require('./routes/users');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
 const likeRoutes = require('./routes/like');
+const photosRoutes = require('./routes/photos');
 
 app.use(express.json());
 
@@ -16,10 +18,17 @@ app.use((req, res, next) => {
     next();
 });
 
+let options = {
+
+};
+
+app.use(express.static("images", options));
+
 app.use('/api/auth', usersRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/like', likeRoutes);
+app.use('/api/photos', photosRoutes)
 
 
 module.exports = app;
