@@ -36,37 +36,65 @@
           email: '',
           password: '',
           dateOfBirth: '',
-          preference: []
+          preference: [],
+          file: ''
         }
       }
     },
     methods: {
       userSignup() {
-        console.log(this.userDetails);
         axios.post('http://localhost:3000/api/auth/signup', this.userDetails)
         .then((response) => {
-          console.log(response);
-          this.$router.push('/');
-          axios.post('http://localhost:3000/api/auth/login', this.userDetails)
-          .then(
+          console.log(response.data.message)
+          window.localStorage.setItem('token', response.data.token);
+          window.localStorage.setItem('userID', response.data.userID);
+          window.localStorage.setItem('preference', response.data.preference);
+          window.localStorage.setItem('email', response.data.email);
+          window.localStorage.setItem('firstName', response.data.firstName);
+          window.localStorage.setItem('lastName', response.data.lastName);
+          window.localStorage.setItem('isLoggedIn', true);
+
+          this.authStore.isLoggedIn = true;
+          this.authStore.firstName = response.data.firstName;
+          this.authStore.lastName = response.data.lastName;
+          this.authStore.userID = response.data.userID;
+          
+          axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+          axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+
+          let formData = new FormData();
+          const userID = response.data.userID;
+
+          formData.append('file', this.userDetails.file);
+          formData.append('userID', userID);
+
+          axios.post('http://localhost:3000/api/photos/userphoto', formData).then(
             (response) => {
-              window.localStorage.setItem('token', response.data.token);
-              window.localStorage.setItem('userID', response.data.userID);
-              window.localStorage.setItem('preference', response.data.preference);
-              window.localStorage.setItem('email', response.data.email);
-              window.localStorage.setItem('firstName', response.data.firstName);
-              window.localStorage.setItem('lastName', response.data.lastName);
-              this.authStore.isLoggedIn = true;
-              this.$router.push('/');
+              console.log(response.data.message);
+
+              window.localStorage.setItem('profileImage', response.data.profileImage);
+
+              this.authStore.profileImage = response.data.profileImage;
+
+              window.setTimeout(() => {
+                this.$router.push('/')
+              }, 1500);
             }
           ).catch(
             (error) => {
-              console.log(error);
+              console.log(error)
             }
           )
-        }).catch((error) => {
-          console.log(error);
-        })
+
+          this.$router.push('/')
+
+        }).catch(
+          (error) => {
+            console.log(error);
+          })
+      },
+      handleFileUpload( event ) {
+        this.userDetails.file = event.target.files[0]
       },
       prefenceCheckBox() {
          if (this.userDetails.preference.length == 3) {
@@ -90,7 +118,7 @@
           class="card bg-secondary text-white shadow-lg border-3 rounded-1"
           style="border-radius: 0rem">
           <div class="card-body p-5 text-center">
-            <form  @submit.prevent="userSignup">
+            <form  @submit.prevent="userSignup()">
               <h2
                 class="fw-bold mb-2 text-uppercase">Signup</h2>
               <p class="text-white-50 mb-5">
@@ -105,7 +133,7 @@
                 <input
                   type="text"
                   id="firstName"
-                  class="form-control form-control-lg"
+                  class="form-control"
                   v-model="userDetails.firstName"
                   required
                 />
@@ -120,7 +148,7 @@
                 <input
                   type="text"
                   id="lastName"
-                  class="form-control form-control-lg"
+                  class="form-control"
                   v-model="userDetails.lastName"
                   required
                 />
@@ -132,7 +160,7 @@
                 <input
                   type="email"
                   id="typeEmailX"
-                  class="form-control form-control-lg"
+                  class="form-control"
                   v-model="userDetails.email"
                   required
                 />
@@ -145,7 +173,7 @@
                 <input
                   type="password"
                   id="typePasswordX"
-                  class="form-control form-control-lg"
+                  class="form-control"
                   v-model="userDetails.password"
                   required
                 />
@@ -161,7 +189,7 @@
                 <input
                   type="date"
                   id="dateOfBirth"
-                  class="form-control form-control-lg"
+                  class="form-control"
                   v-model="userDetails.dateOfBirth"
                   required
                 /> 
@@ -232,13 +260,13 @@
                     <input 
                       class="form-check-input" 
                       type="checkbox" 
-                      id="inlineCheckbox3" 
+                      id="inlineCheckbox4" 
                       value="kids"
                       v-model="userDetails.preference"
                       @change="prefenceCheckBox">
                     <label 
                       class="form-check-label" 
-                      for="inlineCheckbox3">
+                      for="inlineCheckbox4">
                       Kids
                     </label>
                   </div>
@@ -247,13 +275,13 @@
                     <input 
                       class="form-check-input" 
                       type="checkbox" 
-                      id="inlineCheckbox3" 
+                      id="inlineCheckbox5" 
                       value="cooking"
                       v-model="userDetails.preference"
                       @change="prefenceCheckBox">
                     <label 
                       class="form-check-label" 
-                      for="inlineCheckbox3">
+                      for="inlineCheckbox5">
                       Cooking
                     </label>
                   </div>
@@ -262,19 +290,35 @@
                     <input 
                       class="form-check-input" 
                       type="checkbox" 
-                      id="inlineCheckbox3" 
+                      id="inlineCheckbox6" 
                       value="traveling"
                       v-model="userDetails.preference"
                       @change="prefenceCheckBox">
                     <label 
                       class="form-check-label" 
-                      for="inlineCheckbox3">
+                      for="inlineCheckbox6">
                       Traveling
                     </label>
                   </div>
 
                 </div>
               </div>
+
+              <hr style="width: 100%; height: 2px">
+
+              <div class="form-outline form-white mb-4">
+                <label
+                  class="form-label"
+                  for="userPhoto"
+                  >Photo</label>
+                <input
+                  type="file"
+                  id="userPhoto"
+                  class="form-control"
+                  @change="handleFileUpload( $event )"
+                  required
+                /> 
+              </div>     
               
               <button 
                 class="btn btn-outline-light btn-lg px-5" 
