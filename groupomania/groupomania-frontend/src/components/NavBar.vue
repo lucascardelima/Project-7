@@ -72,9 +72,13 @@ export default {
                 window.localStorage.removeItem('firstName');
                 window.localStorage.removeItem('lastName');
                 window.localStorage.removeItem('isLoggedIn');
+                window.localStorage.removeItem('profileImage');
+
                 delete this.axios.defaults.headers.common['Authorization']
                 delete this.axios.defaults.headers.post['Authorization']
+
                 this.authStore.$reset();
+                
                 this.$router.push('/loginpage');
                 
             } else {
@@ -165,7 +169,7 @@ export default {
                         title="Account">
                         <router-link 
                             class="navbar-link"
-                            to="/">
+                            to="/userpage">
                             <font-awesome-icon icon="fa-solid fa-user" />
                         </router-link>
                     </li>
