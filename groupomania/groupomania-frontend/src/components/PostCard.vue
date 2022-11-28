@@ -260,7 +260,8 @@
               v-if="postData.profileImage" 
               class="rounded-circle" 
               :src="require(`../../../backend/images/${postData.profileImage}`)" 
-              width="35"> 
+              width="40 "
+              height="40"> 
             <div class="d-flex flex-row flex-wrap ml-2">
               <span class="fw-bold px-2 text-capitalize">{{ '/' + post.postCategory }}</span>
               <span class="fw-bold">.</span>
