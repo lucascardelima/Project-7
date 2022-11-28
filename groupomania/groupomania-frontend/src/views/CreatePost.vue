@@ -22,12 +22,13 @@
           postTitle:'',
           postText: '',
           postCategory: ''
-        }
+        },
+        file: ''
       }
     },
     methods: {
       createPost() {
-        this.postDetails.userID = localStorage.getItem('userID');
+
         axios.post('http://localhost:3000/api/posts/createpost', {
           data: {
             postTitle: this.postDetails.postTitle,
@@ -36,15 +37,50 @@
             userID: localStorage.getItem('userID')
           }
         }).then(
-          response => console.log(response.data)
-          ).catch(
-            error => console.log(error)
-          )
+          (response) => {
+            if (this.file) {
+              let formData = new FormData();
+              const postID = response.data.postID;
 
-        this.postDetails.postTitle = '';
-        this.postDetails.postText = '';
-        this.postDetails.postCategory = '';
-        this.$router.push('/')
+              formData.append('file', this.file);         
+              formData.append('postID', postID);
+
+              axios.post(
+                'http://localhost:3000/api/photos/postphoto',
+                formData
+                ).then(
+                  (response) => {
+                    console.log(response.data.message)
+                    this.postDetails.postTitle = '';
+                    this.postDetails.postText = '';
+                    this.postDetails.postCategory = '';
+                    window.setTimeout(() => {
+                      this.$router.push('/')
+                    }, 1500);
+                  }
+                ).catch(
+                  (error) => {
+                    console.log(error)
+                  }
+                )
+            
+            } else {
+              console.log(response.data.message)
+              this.postDetails.postTitle = '';
+              this.postDetails.postText = '';
+              this.postDetails.postCategory = '';
+              this.$router.push('/');
+            }
+          }).catch(
+            (error) => {
+              console.log(error)
+            })
+
+        
+      },
+      handleFileUpload( event ) {
+        this.file = event.target.files[0]
+        
       }
     }
   }
@@ -117,12 +153,15 @@
               </div>
 
               <div class="mb-3">
+                <label  for="fileInput"
+                        class="form-label fw-bold">
+                  File
+                </label>
                 <input
+                  class="form-control"
                   type="file"
-                  accept="image/*"
-                  ref="file"
-                  
-                />
+                  id="fileInput"
+                  @change="handleFileUpload( $event )"/>
 
               </div>
               
