@@ -25,7 +25,9 @@ body {
 <template>
   <body>
     <NavBar/>
-    <router-view></router-view>
+    <div class="container mt-5">
+      <router-view></router-view>
+    </div>
     <FooterBar/>
   </body>
 </template>
