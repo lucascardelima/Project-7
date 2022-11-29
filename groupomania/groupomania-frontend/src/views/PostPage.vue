@@ -30,6 +30,7 @@ export default {
         postText: '',
         postCategory: '',
         likes: [],
+        views: [],
         firstName: '',
         lastName: '', 
         postCreationDate: '',
@@ -44,6 +45,7 @@ export default {
       },
       isOwner: false,
       isLiked: false,
+      isViewed: false,
       countsOfLikes: 0,
       countsOfComments: 0
     }
@@ -84,6 +86,23 @@ export default {
           this.isLiked = true;
         }
       }
+    },
+    userViewedCheck() {
+      if (this.postData.userID == localStorage.getItem('userID')) {
+        this.isViewed = true;
+
+      } else {
+
+        let i = 0;
+
+        for (i = 0; i < this.postData.views[0].length; i++) {
+          if (this.postData.views[0][i].userID == localStorage.getItem('userID')) {
+            this.isViewed = true;
+          }
+        }
+      }
+      
+
     },
     likeButton() {
       if (this.isLiked) {
@@ -250,6 +269,44 @@ export default {
           console.log(error)
         }
       )
+    },
+    viewPost() {
+      if (!this.isViewed) {
+        axios.post('http://localhost:3000/api/view/', {
+          data: {
+            userID : localStorage.getItem('userID'),
+            postID: this.postData.postID
+          }
+        }).then(
+          (response) => {
+            this.postData.views = response.data.userID
+          }
+        ).catch(
+          (error) => {
+            console.log(error)
+          }
+        )
+      } else {
+        console.log('post already viewed by this user')
+      }
+      
+    },
+    getViews() {
+      axios.post('http://localhost:3000/api/view/getviews', {
+        data: {
+          postID: this.postData.postID
+        }
+      }).then(
+        (response) => {
+      
+          this.postData.views.push(response.data[0])
+          this.userViewedCheck();
+        }
+      ).catch(
+        (error) => {
+          console.log(error)
+        }
+      )
     }
   },
   computed: {
@@ -295,6 +352,11 @@ export default {
     this.getPost();
     this.getLikes();
     this.getComments();
+    this.getViews();
+    setTimeout(() => {
+      this.viewPost()
+    }, 1000)
+    
     
     
   }
@@ -316,7 +378,12 @@ export default {
 
                 <div class="d-flex flex-row align-items-center feed-text px-2">
                   
-                  <img v-if="postData.profileImage" class="rounded-circle" :src="require(`../../../backend/images/${postData.profileImage}`)" width="35"> 
+                  <img 
+                    v-if="postData.profileImage" 
+                    class="rounded-circle" 
+                    :src="require(`../../../backend/images/${postData.profileImage}`)" 
+                    width="40"
+                    height="40"> 
                   
                   <div class="d-flex flex-row flex-wrap ml-2">
                     <span class="fw-bold px-2 text-capitalize">{{ '/' + postData.postCategory }}</span>

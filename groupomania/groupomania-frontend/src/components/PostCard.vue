@@ -3,6 +3,10 @@
     background-color: #eee
   }
 
+  [v-cloak] {
+    display: none;
+  }
+
   .socials i {
     margin-right: 14px;
     font-size: 17px;
@@ -64,10 +68,13 @@
           category: this.post.postCategory,
           imageUrl: this.post.imageUrl,
           profileImage: this.post.profileImage,
-          likes: []
+          userID: this.post.userID,
+          likes: [],
+          views: []
         },
         isOwner: false,
         isLiked: false,
+        isViewed: false,
         countsOfLikes: 0,
         countsOfComments: 0,
         hover: false,
@@ -88,6 +95,23 @@
             this.isLiked = true
           }
         }
+      },
+      userViewedCheck() {
+        if (this.postData.userID == localStorage.getItem('userID')) {
+          this.isViewed = true;
+
+        } else {
+
+          let i = 0;
+
+          for (i = 0; i < this.postData.views[0].length; i++) {
+            if (this.postData.views[0][i].userID == localStorage.getItem('userID')) {
+              this.isViewed = true
+            }
+          }
+        }
+
+        
       },
       deletePost(post) {
 
@@ -195,6 +219,23 @@
             console.log(error)
           }
         )
+      },
+      getViews() {
+        axios.post('http://localhost:3000/api/view/getviews', {
+          data: {
+            postID: this.postData.postID
+          }
+        }).then(
+          (response) => {
+
+            this.postData.views.push(response.data[0])
+            this.userViewedCheck();
+          }
+        ).catch(
+          (error) => {
+            console.log(error)
+          }
+        )
       }
     },
     computed: {
@@ -234,6 +275,7 @@
       this.getLikes();
       this.getComments();
       this.userOwnerCheck();
+      this.getViews();
       
     }
   }
@@ -260,7 +302,7 @@
               v-if="postData.profileImage" 
               class="rounded-circle" 
               :src="require(`../../../backend/images/${postData.profileImage}`)" 
-              width="40 "
+              width="40"
               height="40"> 
             <div class="d-flex flex-row flex-wrap ml-2">
               <span class="fw-bold px-2 text-capitalize">{{ '/' + post.postCategory }}</span>
@@ -268,8 +310,10 @@
               <span class="font-size-custom text-secondary px-2"> 
                 {{ 'Posted by ' + post.firstName + ' ' + post.lastName + ' ' + postTenure + ' ago'  }}
               </span>
-
+              
+              
             </div>
+            <h6 v-if="!this.isViewed"><span v-cloak class="badge bg-success align-items-center mt-2">New</span></h6>
             
           </div>
 
