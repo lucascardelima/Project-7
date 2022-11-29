@@ -28,6 +28,11 @@
     },
     methods: {
       createPost() {
+        const spinner = document.querySelector('#spinner')
+
+        spinner.classList.remove('invisible')
+        spinner.classList.add('visible')
+
 
         axios.post('http://localhost:3000/api/posts/createpost', {
           data: {
@@ -51,9 +56,6 @@
                 ).then(
                   (response) => {
                     console.log(response.data.message)
-                    this.postDetails.postTitle = '';
-                    this.postDetails.postText = '';
-                    this.postDetails.postCategory = '';
                     window.setTimeout(() => {
                       this.$router.push('/')
                     }, 1500);
@@ -66,9 +68,6 @@
             
             } else {
               console.log(response.data.message)
-              this.postDetails.postTitle = '';
-              this.postDetails.postText = '';
-              this.postDetails.postCategory = '';
               this.$router.push('/');
             }
           }).catch(
@@ -164,13 +163,27 @@
                   @change="handleFileUpload( $event )"/>
 
               </div>
+
+              <div class="d-flex">
+                <button
+                  id="submitButton" 
+                  class="btn btn-outline-light btn-secondary btn-lg px-5" 
+                  type="submit">
+                    Submit
+                </button> 
+                <div id="spinner" class="invisible">
+                  <div class="spinner-border mx-4 d-flex mt-2" role="status">
+                    <span></span>
+                  </div>
+                </div>
+
+              </div>
               
-              <button
-                id="submitButton" 
-                class="btn btn-outline-light btn-secondary btn-lg px-5" 
-                type="submit">
-                  Submit
-              </button>
+              
+              
+              
+              
+              
               
             </form>
           </div>
