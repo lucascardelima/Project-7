@@ -105,6 +105,7 @@
         <div class="card bg-secondary text-white shadow-lg border-3 rounded-1">
           <div class="card-body p-5 text-center">
             <form @submit.prevent="userLogin">
+              
               <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
               <p class="text-white-50 mb-5">
                 Please enter your details to login
