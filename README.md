@@ -1,6 +1,4 @@
-# Project-7
-
-## Groupomania. 
+# Project 7 - GROUPOMANIA 
 
 ## Technologies Used in this project
 
@@ -31,12 +29,20 @@
   - Microsoft SQL Server
       - Stored Procedures
 
-## PORTS 
+## Settings
 
-### Front End 
+### Front End
 
-  *8080*
+`cd groupomania/groupomania-frontend`
+
+`npm run serve`
+
+Port **8080**
 
 ### Back End
- 
-  *3000*
+
+`cd groupomania/backend`
+
+`nodemon server`
+
+Port **3000**
