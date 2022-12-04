@@ -29,6 +29,10 @@
   - Microsoft SQL Server
       - Stored Procedures
 
+## Github Repo
+
+[Project Repo](https://github.com/lucascardelima/Project-7)
+
 ## Settings
 
 ### Front End
