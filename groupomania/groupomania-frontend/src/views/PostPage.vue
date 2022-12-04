@@ -294,7 +294,8 @@ export default {
     getViews() {
       axios.post('http://localhost:3000/api/view/getviews', {
         data: {
-          postID: this.postData.postID
+          postID: this.postData.postID,
+          userID: localStorage.getItem('userID')
         }
       }).then(
         (response) => {
@@ -366,7 +367,7 @@ export default {
 
 <template>
 
-  <div class="container mt-4 mb-5">
+  <main class="container mt-4 mb-5">
     <div class="d-flex justify-content-center">
       <div class="col-md-8">
 
@@ -383,7 +384,8 @@ export default {
                     class="rounded-circle" 
                     :src="require(`../../../backend/images/${postData.profileImage}`)" 
                     width="40"
-                    height="40"> 
+                    height="40"
+                    :alt="`${postData.firstName} Profile Photo`"> 
                   
                   <div class="d-flex flex-row flex-wrap ml-2">
                     <span class="fw-bold px-2 text-capitalize">{{ '/' + postData.postCategory }}</span>
@@ -426,7 +428,11 @@ export default {
             </div>
 
             <div>
-              <img v-if="postData.imageUrl" class="w-100" :src="require('../../../backend/images/' + postData.imageUrl)">
+              <img 
+                v-if="postData.imageUrl" 
+                class="w-100" 
+                :src="require('../../../backend/images/' + postData.imageUrl)" 
+                :alt="postData.postTitle">
             </div>
 
             <div class="p-2 px-3 d-flex flex-column">
@@ -443,7 +449,8 @@ export default {
                 <a
                   href=""
                   :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }"
-                  @click.prevent="likeButton">
+                  @click.prevent="likeButton"
+                  aria-label="Like Button">
                   <font-awesome-icon icon="fa-solid fa-thumbs-up"/>
                 </a>
                 
@@ -495,7 +502,7 @@ export default {
         
       </div>
     </div>
-  </div>
+  </main>
   
 
 

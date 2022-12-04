@@ -3,10 +3,6 @@
     background-color: #eee
   }
 
-  [v-cloak] {
-    display: none;
-  }
-
   .socials i {
     margin-right: 14px;
     font-size: 17px;
@@ -106,7 +102,8 @@
 
           for (i = 0; i < this.postData.views[0].length; i++) {
             if (this.postData.views[0][i].userID == localStorage.getItem('userID')) {
-              this.isViewed = true
+              this.isViewed = true;
+
             }
           }
         }
@@ -158,6 +155,9 @@
             data: {
               userID: localStorage.getItem('userID'),
               postID: post.postID
+            },
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem('token')}`
             }
           }).then(
             (response) => {
@@ -223,6 +223,7 @@
       getViews() {
         axios.post('http://localhost:3000/api/view/getviews', {
           data: {
+            userID: localStorage.getItem('userID'),
             postID: this.postData.postID
           }
         }).then(
@@ -283,118 +284,142 @@
 </script>
 
 <template>
-  
-  <router-link  :to="`/postpage/${post.postID}`" 
-                class="card-link text-decoration-none text-reset"
-                id="cardLink"
-                >
 
-    <div  class="bg-white border mt-4 shadow rounded-1"
-                @mouseover="hover = true"
-                @mouseleave="hover = false"
-                :class="{ 'border-secondary' : hover}">
+  <div>
+    <router-link  :to="`/postpage/${post.postID}`" 
+                  class="card-link text-decoration-none text-reset"
+                  :id="`cardLink${postData.postID}`"
+                  >
 
-      <div>
-        <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
+      <div  class="bg-white border mt-4 shadow rounded-1"
+                  @mouseover="hover = true"
+                  @mouseleave="hover = false"
+                  :class="{ 'border-secondary' : hover}">
 
-          <div class="d-flex flex-row align-items-center feed-text px-2">
-            <img 
-              v-if="postData.profileImage" 
-              class="rounded-circle" 
-              :src="require(`../../../backend/images/${postData.profileImage}`)" 
-              width="40"
-              height="40"> 
-            <div class="d-flex flex-row flex-wrap ml-2">
-              <span class="fw-bold px-2 text-capitalize">{{ '/' + post.postCategory }}</span>
-              <span class="fw-bold">.</span>
-              <span class="font-size-custom text-secondary px-2"> 
-                {{ 'Posted by ' + post.firstName + ' ' + post.lastName + ' ' + postTenure + ' ago'  }}
-              </span>
-              
+        <div>
+          <div class="d-flex flex-row justify-content-between align-items-center p-2 border-bottom">
+
+            <div class="d-flex flex-row align-items-center feed-text px-2">
+              <img 
+                v-if="postData.profileImage" 
+                class="rounded-circle" 
+                :src="require(`../../../backend/images/${postData.profileImage}`)" 
+                width="40"
+                height="40"
+                :alt="`${postData.firstName} Profile Photo`"> 
+              <div class="d-flex flex-row flex-wrap ml-2">
+                <span class="fw-bold px-2 text-capitalize">{{ '/' + post.postCategory }}</span>
+                <span class="fw-bold">.</span>
+                <span class="font-size-custom text-secondary px-2"> 
+                  {{ 'Posted by ' + post.firstName + ' ' + post.lastName + ' ' + postTenure + ' ago'  }}
+                </span>
+                
+                
+              </div>
+              <h6 
+                v-if="!isViewed">
+                <span 
+                  class="badge bg-success align-items-center mt-2">
+                  New
+                </span>
+              </h6>
               
             </div>
-            <h6 v-if="!this.isViewed"><span v-cloak class="badge bg-success align-items-center mt-2">New</span></h6>
-            
-          </div>
 
 
-          <div v-if="this.isOwner" >
-            <a class="px-3 text-decoration-none text-reset" 
-              type="button"
-              id="dropdownMenuButton1"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <font-awesome-icon icon="fa-solid fa-ellipsis-vertical"/>
-            </a>
-            <ul
-              class="dropdown-menu"
-              aria-labelledby="dropdownMenuButton1">
-              <li>
-                <router-link
-                :to="`/editpost/${post.postID}`"
-                class="dropdown-item"
-                >Edit</router-link>
-              </li>
-              <li>
-                <a
-                class="dropdown-item"
-                href="#"
-                @click.prevent="deletePost(post)">
-                Delete</a>
-              </li>
-            </ul>
+            <div v-if="this.isOwner" >
+              <a class="px-3 text-decoration-none text-reset" 
+                type="button"
+                :id="`dropdownMenuButton1${postData.postID}`"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Post Menu Dropbown">
+                <font-awesome-icon icon="fa-solid fa-ellipsis-vertical"/>
+              </a>
+              <ul
+                class="dropdown-menu"
+                :aria-labelledby="`dropdownMenuButton1${postData.postID}`">
+                <li>
+                  <router-link
+                  :to="`/editpost/${post.postID}`"
+                  class="dropdown-item"
+                  aria-label="Edit Post"
+                  >Edit</router-link>
+                </li>
+                <li>
+                  <a
+                  class="dropdown-item"
+                  href="#"
+                  @click.prevent="deletePost(post)"
+                  aria-label="Delete Post">
+                  Delete</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <img v-if="postData.imageUrl" class="w-100" :src="require(`../../../backend/images/${postData.imageUrl}`)">
-      </div>
+        <div>
+          <img 
+            v-if="postData.imageUrl" 
+            class="w-100" 
+            :src="require(`../../../backend/images/${postData.imageUrl}`)" 
+            :alt="postData.title">
+        </div>
 
-      <div class="p-2 px-3 d-flex flex-column">
-          <span class="py-2 fs-5 fw-bold">
-            {{ post.postTitle }}
-          </span> 
-          <span class="fs-6">
-            {{ post.postText }}
-          </span>
-      </div>
+        <div class="p-2 px-3 d-flex flex-column">
+            <span class="py-2 fs-5 fw-bold">
+              {{ post.postTitle }}
+            </span> 
+            <span class="fs-6">
+              {{ post.postText }}
+            </span>
+        </div>
 
-      <div  class="d-flex justify-content-end socials"
-            id="socialContainer">
-          <span class="py-2"
-                @click.prevent="likeButton(post)" >
-            <a
-              href=""
-              :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }"
-              >
-              <font-awesome-icon icon="fa-solid fa-thumbs-up"/>
-            </a>
-            
-          </span>
-          <div class="py-2 px-3">
-            <span> {{ countsOfLikes }} likes</span>
-          </div>
-
-          <span class="py-2">
-            <a href="" class="text-reset">
-              <font-awesome-icon icon="fa-solid fa-comment"/>
-            </a>
-          </span>
-          <div class="py-2 px-3 d-flex flex-row ">
-            <span class="me-2"> {{ countsOfComments }} </span>
-            
-              <router-link
-                :to="`/postpage/${post.postID}`"
-                class="text-reset text-decoration-none"
-                >Comments
-              </router-link> 
+        <div  class="d-flex justify-content-end socials"
+              :id="`socialContainer${postData.postID}`">
+            <span class="py-2"
+                  @click.prevent="likeButton(post)" >
+              <a
+                href=""
+                :class="{ 'text-danger': this.isLiked, 'text-reset': !this.isLiked }"
+                aria-label="Like Button"
+                >
+                <font-awesome-icon icon="fa-solid fa-thumbs-up"/>
+              </a>
               
-          </div>
-          
-      </div>
+            </span>
+            <div class="py-2 px-3">
+              <span> {{ countsOfLikes }} likes</span>
+            </div>
 
-    </div>
-  </router-link>
+            <span class="py-2">
+              <a 
+                href="" 
+                class="text-reset"
+                aria-label="Comment Button"
+                >
+                <font-awesome-icon icon="fa-solid fa-comment"/>
+              </a>
+            </span>
+            <div class="py-2 px-3 d-flex flex-row ">
+              <span class="me-2"> {{ countsOfComments }} </span>
+              
+                <router-link
+                  :to="`/postpage/${post.postID}`"
+                  class="text-reset text-decoration-none"
+                  >Comments
+                </router-link> 
+                
+            </div>
+            
+        </div>
+
+      </div>
+    </router-link>
+
+  </div>
+  
+  
 
 </template>

@@ -1,5 +1,5 @@
 <style scoped>
-
+ 
 </style>
 
 <script >
@@ -7,8 +7,8 @@
   import PostCard from '../components/PostCard.vue'
   
   axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
-  axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
-    
+  axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}` 
+  
   export default {
     name: 'HomePage',
     components: {
@@ -72,14 +72,14 @@
   <div class="container mt-4 mb-5">
     <div class="d-flex justify-content-center row">
       <div class="col-md-8">
-        <div class="feed p-2">
+        <main class="feed p-2">
        
           <PostCard v-for="post in posts"
                     :post="post"
                     :key="post.postID"
                     @delete-post="deletePost"/>
 
-        </div>
+        </main>
       </div>
     </div>
   </div>

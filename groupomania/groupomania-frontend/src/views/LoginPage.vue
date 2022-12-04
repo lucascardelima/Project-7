@@ -14,6 +14,7 @@
 
 <script>
   import axios from 'axios'
+
   import { useAuthStore } from '../stores/AuthStore'
 
   export default {
@@ -43,7 +44,6 @@
       userLogin() {
         axios.post('http://localhost:3000/api/auth/login', this.userDetails)
         .then((response) => {
-          console.log(response.data)
           window.localStorage.setItem('token', response.data.token);
           window.localStorage.setItem('userID', response.data.userID);
           window.localStorage.setItem('preference', response.data.preference);
@@ -61,7 +61,7 @@
 
           axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
           axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
-
+         
           this.$router.push('/')
 
           }
@@ -99,7 +99,7 @@
 </script>
 
 <template>
-  <div class="container py-5">
+  <main class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
         <div class="card bg-secondary text-white shadow-lg border-3 rounded-1">
@@ -179,5 +179,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>

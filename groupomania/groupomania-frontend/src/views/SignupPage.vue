@@ -15,6 +15,14 @@
   #maxSign {
     color: #FF7373;
   }
+
+  .error-handling {
+    color: red;
+    background-color: white;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+  }
   
 </style>
 
@@ -38,11 +46,15 @@
           dateOfBirth: '',
           preference: [],
           file: ''
+        },
+        errorHandling: {
+          errorMessage: ''
         }
       }
     },
     methods: {
       userSignup() {
+        this.errorHandling.errorMessage = '';
         axios.post('http://localhost:3000/api/auth/signup', this.userDetails)
         .then((response) => {
           console.log(response.data.message)
@@ -68,11 +80,12 @@
           formData.append('file', this.userDetails.file);
           formData.append('userID', userID);
 
-          axios.post('http://localhost:3000/api/photos/userphoto', formData).then(
+          axios.post('http://localhost:3000/api/photos/userphoto', formData, 
+          ).then(
             (response) => {
               console.log(response.data.message);
 
-              window.localStorage.setItem('profileImage', response.data.profileImage);
+              window.localStorage.setItem('profileImage', response.data.imageUrl);
 
               this.authStore.profileImage = response.data.profileImage;
 
@@ -86,10 +99,13 @@
             }
           )
 
-          this.$router.push('/')
-
         }).catch(
           (error) => {
+            if(error.response.data.error.precedingErrors[0].number == 2627) {
+              this.errorHandling.errorMessage = 'Email already in use';
+              document.querySelector("#typeEmailX").style.border = "1px solid #FF0000";
+
+            }
             console.log(error);
           })
       },
@@ -111,16 +127,17 @@
 </script>
 
 <template>
-  <div class="container py-5">
+  <main class="container py-5">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
         <div
-          class="card bg-secondary text-white shadow-lg border-3 rounded-1"
-          style="border-radius: 0rem">
+          class="card bg-secondary text-white shadow-lg border-3 rounded-1">
           <div class="card-body p-5 text-center">
             <form  @submit.prevent="userSignup()">
               <h2
-                class="fw-bold mb-2 text-uppercase">Signup</h2>
+                class="fw-bold mb-2 text-uppercase">
+                  Signup
+              </h2>
               <p class="text-white-50 mb-5">
                 Please enter your details
               </p>
@@ -153,6 +170,7 @@
                   required
                 />
               </div>
+
               <div class="form-outline form-white mb-4">
                 <label
                   class="form-label"
@@ -318,10 +336,17 @@
                   @change="handleFileUpload( $event )"
                   required
                 /> 
-              </div>     
+              </div> 
+              
+              <p  v-if="errorHandling.errorMessage"
+                  class="error-handling mb-5"
+              >
+                {{ errorHandling.errorMessage }}
+
+              </p>
               
               <button 
-                class="btn btn-outline-light btn-lg px-5" 
+                class="btn btn-outline-light btn-lg px-5 justify-content-center" 
                 id="submitButton" 
                 type="submit"
                 disabled>
@@ -333,7 +358,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
   </template>
 
   
