@@ -65,7 +65,7 @@
 
 
 
-  <div class="container py-5 h-100">
+  <main class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-md-12 col-xl-4">
 
@@ -76,7 +76,8 @@
                 v-if="profileImage" 
                 class="rounded-circle img-fluid" 
                 :src="require(`../../../backend/images/${profileImage}`)" 
-                width="150">
+                width="150"
+                :alt="`${fullName} Profile Photo` ">
             </div>
             <h4 class="mb-2">{{ fullName }}</h4>
             <p class="text-muted mb-4">{{ email }} </p>
@@ -106,7 +107,7 @@
 
       </div>
     </div>
-  </div>
+  </main>
 
 
 
