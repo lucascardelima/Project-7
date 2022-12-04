@@ -12,6 +12,9 @@
 <script>
 import axios from 'axios';
 
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+axios.defaults.headers.post['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+
 export default {
   name: 'postEdit', 
   data() {
@@ -21,12 +24,21 @@ export default {
         postTitle: '',
         postText: '',
         postCategory: '',
-        userID: ''
-      }
+        userID: '',
+        url: null,
+        imageUrl: '',
+        formerUrl: ''
+      },
+      file: ''
     }
   },
   methods: {
     updatePost() {
+      const spinner = document.querySelector('#spinner')
+
+      spinner.classList.remove('invisible')
+      spinner.classList.add('visible')
+
       axios.put('http://localhost:3000/api/posts/updatepost', {
         data: {
           postID: this.postData.postID,
@@ -37,14 +49,43 @@ export default {
         }
       }).then(
         (response) => {
-          console.log(response)
-          this.$router.push('/')
+          
+          if (this.file) {
+            let formData = new FormData();
+
+            formData.append('file', this.file);
+            formData.append('postID', this.postData.postID);
+            formData.append('formerUrl', this.postData.formerUrl)
+
+            axios.post('http://localhost:3000/api/photos/postphoto', formData).then(
+              (response) => {
+                console.log(response.data.message)
+                window.setTimeout(() => {
+                  this.$router.push('/postpage/' + this.postData.postID)
+                }, 1500)
+              }
+            ).catch(
+              (error) => {
+                console.log(error)
+              }
+            )
+          } else {
+            console.log(response.data.message)
+            this.$router.push('/postpage/' + this.postData.postID)
+          }  
+
         }
       ).catch(
         (error) => {
           console.log(error)
         }
       )
+    },
+    handleFileUpload( event ) {
+      const file = event.target.files[0]
+      this.postData.url = URL.createObjectURL(file)
+      this.file = file
+      this.postData.imageUrl = ''
     }
   },
   mounted() {
@@ -59,6 +100,8 @@ export default {
         this.postData.postText = response.data[0].postText;
         this.postData.postCategory = response.data[0].postCategory;
         this.postData.userID = response.data[0].userID;
+        this.postData.imageUrl = response.data[0].imageUrl;
+        this.postData.formerUrl = response.data[0].imageUrl;
       }
     ).catch(
       (error) => {
@@ -141,12 +184,50 @@ export default {
 
               </div>
 
-              <button
-                id="submitButton" 
-                class="btn btn-outline-light btn-secondary btn-lg px-5" 
-                type="submit">
-                  Update
-              </button>
+              <div class="mb-3">
+                <label  for="fileInput"
+                        class="form-label fw-bold">
+                  File
+                </label>
+                <input
+                  class="form-control"
+                  type="file"
+                  id="fileInput"
+                  @change="handleFileUpload( $event )"/>
+
+              </div>
+
+              <div 
+                class="my-3"
+                id="imagePreview">
+                <img 
+                  v-if="postData.url"
+                  :src="postData.url"
+                  width="200"/> 
+                <img
+                  v-if="postData.imageUrl"
+                  :src="require(`../../../backend/images/${postData.imageUrl}`)"
+                  width="200"/>
+
+              </div>
+
+              <div class="d-flex">
+
+                <button
+                  id="submitButton" 
+                  class="btn btn-outline-light btn-secondary btn-lg px-5" 
+                  type="submit">
+                    Update
+                </button>
+
+                <div id="spinner" class="invisible">
+                  <div class="spinner-border mx-4 d-flex mt-2" role="status">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              
+              
 
             </form>
           </div>

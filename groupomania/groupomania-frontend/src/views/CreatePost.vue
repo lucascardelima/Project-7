@@ -6,6 +6,12 @@
     background-color: green;
     color: white;
  }
+ #preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ }
+
 </style>
 
 <script>
@@ -21,7 +27,8 @@
         postDetails: {
           postTitle:'',
           postText: '',
-          postCategory: ''
+          postCategory: '',
+          url: null
         },
         file: ''
       }
@@ -32,7 +39,6 @@
 
         spinner.classList.remove('invisible')
         spinner.classList.add('visible')
-
 
         axios.post('http://localhost:3000/api/posts/createpost', {
           data: {
@@ -78,7 +84,9 @@
         
       },
       handleFileUpload( event ) {
-        this.file = event.target.files[0]
+        const file = event.target.files[0]
+        this.postDetails.url = URL.createObjectURL(file)
+        this.file = file
         
       }
     }
@@ -87,7 +95,7 @@
 </script>
 
 <template>
-  <div class="container py-5 ">
+  <main class="container py-5 ">
     <div class="row d-flex justify-content-center align-items-center">
       <div class="main-card">
         <div class="card bg-white text-black rounded-1 shadow border-4">
@@ -164,6 +172,15 @@
 
               </div>
 
+              <div 
+                class="my-3"
+                id="imagePreview">
+                <img 
+                  v-if="postDetails.url"
+                  :src="postDetails.url"
+                  width="200"/> 
+              </div>
+
               <div class="d-flex">
                 <button
                   id="submitButton" 
@@ -190,5 +207,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
