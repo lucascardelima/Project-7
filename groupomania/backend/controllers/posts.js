@@ -46,9 +46,10 @@ exports.updatePost = async (req, res, next) => {
     .input('userID', sql.NVarChar, req.body.data.userID)
     .input('postEditDate', sql.DateTime, currentDate)
     .execute('updatePost').then(
-        () => {
+        (result) => {
             res.status(200).json({
-                success: 'Post updated successfully'
+                message: 'Post Created Successfully',
+                postID: result.recordset[0].postID
             })
        }
     ).catch (

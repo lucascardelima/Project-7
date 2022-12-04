@@ -1,6 +1,7 @@
 const sql = require('mssql');
 const dbconfig = require('../config/dbconfig').config;
 const crypto = require('crypto');
+const fs = require('fs');
 
 exports.userPhoto = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
@@ -30,6 +31,14 @@ exports.userPhoto = async (req, res, next) => {
 exports.postPhoto = async (req, res, next) => {
     let pool = await sql.connect(dbconfig);
     let request = new sql.Request(pool);
+
+    if (req.body.formerUrl) {
+        const image = 'images/' + req.body.formerUrl
+
+        fs.unlink(image, () => {
+            console.log('Photo deleted successfully')
+        })
+    }
 
     const postImageUrl = req.file.filename;
 
