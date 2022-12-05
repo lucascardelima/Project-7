@@ -23,6 +23,12 @@
     border-radius: 0.5rem;
     text-transform: uppercase;
   }
+
+  #preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ }
   
 </style>
 
@@ -45,7 +51,8 @@
           password: '',
           dateOfBirth: '',
           preference: [],
-          file: ''
+          file: '',
+          url: null
         },
         errorHandling: {
           errorMessage: ''
@@ -54,6 +61,11 @@
     },
     methods: {
       userSignup() {
+        const spinner = document.querySelector('#spinner')
+
+        spinner.classList.remove('invisible')
+        spinner.classList.add('visible')
+        
         this.errorHandling.errorMessage = '';
         axios.post('http://localhost:3000/api/auth/signup', this.userDetails)
         .then((response) => {
@@ -110,7 +122,9 @@
           })
       },
       handleFileUpload( event ) {
-        this.userDetails.file = event.target.files[0]
+        const file = event.target.files[0]
+        this.userDetails.url = URL.createObjectURL(file)
+        this.userDetails.file = file
       },
       prefenceCheckBox() {
          if (this.userDetails.preference.length == 3) {
@@ -344,14 +358,33 @@
                 {{ errorHandling.errorMessage }}
 
               </p>
-              
+
+              <div 
+                class="my-3"
+                id="imagePreview">
+                <img 
+                  v-if="userDetails.url"
+                  :src="userDetails.url"
+                  width="180"/> 
+              </div>
+
               <button 
-                class="btn btn-outline-light btn-lg px-5 justify-content-center" 
-                id="submitButton" 
-                type="submit"
-                disabled>
-                Signup
-              </button>
+                  class="btn btn-outline-light btn-lg px-5 justify-content-center" 
+                  id="submitButton" 
+                  type="submit"
+                  disabled>
+                  Signup
+                </button>
+              
+              <div class="d-flex justify-content-center mt-2">
+
+                <div id="spinner" class="invisible">
+                  <div class="spinner-border mx-4 d-flex mt-2" role="status">
+                    <span></span>
+                  </div>
+                </div>
+
+              </div>
 
             </form>
           </div>
