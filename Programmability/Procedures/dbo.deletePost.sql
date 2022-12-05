@@ -23,6 +23,10 @@ BEGIN
 	
 	WHERE		postID = @postID
 
+	DELETE FROM	PostViews
+
+	WHERE		postID = @postID
+
 	DELETE FROM PostLikes
 
 	WHERE		postID = @postID
