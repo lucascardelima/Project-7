@@ -184,10 +184,11 @@
               <div class="d-flex">
                 <button
                   id="submitButton" 
-                  class="btn btn-outline-light btn-secondary btn-lg px-5" 
+                  class="btn btn-outline-light btn-secondary btn-lg px-5 justify-content-center " 
                   type="submit">
                     Submit
                 </button> 
+
                 <div id="spinner" class="invisible">
                   <div class="spinner-border mx-4 d-flex mt-2" role="status">
                     <span></span>
@@ -195,12 +196,6 @@
                 </div>
 
               </div>
-              
-              
-              
-              
-              
-              
               
             </form>
           </div>
